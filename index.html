@@ -1,0 +1,3074 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-qGdbndvaWlUOBjJpHd8GW/s3ZCzcw6k3eyAzBgQ8t0Q='; style-src 'unsafe-inline'; img-src 'self' data:; connect-src https://uonzyatfdtsgmkkfooue.supabase.co; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta name="referrer" content="no-referrer">
+<title>Registo FTTH</title>
+<style>
+  :root{
+    --header-h: 66px;
+    --paper: #E4E9ED;
+    --paper-raised: #F1F4F6;
+    --paper-line: #C6D0D8;
+    --ink: #1B2733;
+    --ink-soft: #5A6B78;
+    --install: #1F5FA8;
+    --install-bg: #DCE7F3;
+    --suporte: #1E7A5C;
+    --suporte-bg: #DCEEE5;
+    --adicional: #B5490E;
+    --adicional-bg: #F3E2D6;
+    --money: #2F5D3A;
+    --danger: #A13333;
+    --card-bg: #FFFFFF;
+    --btn-bg: #1B2733;
+    --btn-text: #FFFFFF;
+    --radius: 3px;
+  }
+  body[data-theme="dark"]{
+    --paper: #14181D;
+    --paper-raised: #20262D;
+    --paper-line: #363E47;
+    --ink: #E9E4D8;
+    --ink-soft: #97A0AA;
+    --install: #6FA8DC;
+    --install-bg: #1E3549;
+    --suporte: #6FCBA4;
+    --suporte-bg: #1B3A2C;
+    --adicional: #E5975C;
+    --adicional-bg: #452B18;
+    --money: #7FC98F;
+    --danger: #E08585;
+    --card-bg: #1B2027;
+    --btn-bg: #E9E4D8;
+    --btn-text: #14181D;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    transition:background 0.15s ease, color 0.15s ease;
+  }
+  .wrap{max-width:840px;margin:0 auto;padding:20px 16px 60px;}
+
+  header.top{
+    display:flex;align-items:center;justify-content:space-between;
+    border-bottom:2px solid var(--ink);
+    padding:12px 16px;margin:0;flex-wrap:nowrap;gap:8px;
+    position:sticky;top:0;z-index:950;background:var(--paper);
+    height:var(--header-h);
+  }
+  header.top h1{
+    font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+    font-weight:700;font-size:1.5rem;margin:0;letter-spacing:-0.01em;
+  }
+  header.top .sub{font-size:0.8rem;color:var(--ink-soft);}
+  header.top .user-box{display:flex;align-items:center;justify-content:flex-end;gap:10px;font-size:0.85rem;}
+  header.top .user-box .who{color:var(--ink-soft);}
+  header.top .user-box button{
+    background:none;border:1px solid var(--ink);color:var(--ink);
+    font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-weight:600;font-size:0.78rem;
+    padding:5px 10px;border-radius:var(--radius);cursor:pointer;
+  }
+  header.top .user-box .who{max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .avatar-btn{
+    width:40px;height:40px;border-radius:6px;border:1px dashed var(--ink-soft);position:relative;
+    background:var(--paper-raised);color:var(--ink);
+    font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-weight:600;font-size:0.8rem;
+    cursor:pointer;padding:0;overflow:hidden;
+    display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;
+  }
+  .avatar-btn:hover{border-color:var(--ink);}
+  .avatar-btn.has-photo{border:none;}
+  .avatar-btn img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;}
+  .theme-toggle{
+    background:none;border:1px solid var(--paper-line);color:var(--ink);
+    font-size:1rem;line-height:1;width:32px;height:32px;
+    border-radius:50%;cursor:pointer;display:inline-flex;
+    align-items:center;justify-content:center;
+  }
+  .theme-toggle:hover{border-color:var(--ink);}
+
+  .app-shell{display:flex;align-items:flex-start;}
+  .app-shell .wrap{flex:1;min-width:0;max-width:840px;margin:0;}
+  .sidebar{
+    width:236px;flex:0 0 236px;position:sticky;top:var(--header-h);align-self:flex-start;
+    padding:20px 0 20px 16px;
+    height:calc(100vh - var(--header-h));display:flex;flex-direction:column;
+  }
+  .side-backdrop{display:none;}
+  .brand{display:flex;align-items:center;gap:12px;}
+  .menu-btn{
+    display:inline-flex;background:none;border:1px solid var(--paper-line);color:var(--ink);
+    width:38px;height:38px;border-radius:var(--radius);cursor:pointer;
+    align-items:center;justify-content:center;flex:0 0 auto;padding:0;
+  }
+  .menu-btn:hover{border-color:var(--ink);}
+  nav.tabs{display:flex;flex-direction:column;gap:4px;flex:1;min-height:0;}
+  nav.tabs .logout-btn{margin-top:auto;color:var(--danger);}
+  nav.tabs button{
+    font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+    font-weight:600;font-size:0.9rem;
+    background:var(--paper-raised);
+    border:1px solid var(--paper-line);
+    padding:10px 14px;cursor:pointer;color:var(--ink-soft);
+    border-radius:6px;text-align:left;width:100%;
+    display:flex;align-items:center;gap:10px;
+  }
+  nav.tabs button:hover{border-color:var(--ink);}
+  .tab-ico{display:inline-flex;flex:0 0 auto;}
+  .tab-label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  @media(min-width:641px){
+    .sidebar{transition:width 0.2s ease, flex-basis 0.2s ease;}
+    body.sidebar-collapsed .sidebar{width:62px;flex:0 0 62px;padding-left:10px;padding-right:10px;}
+    body.sidebar-collapsed .tab-label{display:none;}
+    body.sidebar-collapsed nav.tabs button{justify-content:center;padding:10px 0;}
+  }
+  nav.tabs button.active{
+    background:var(--card-bg);color:var(--ink);border-color:var(--ink);
+  }
+  main.sheet{
+    background:var(--card-bg);
+    border:1px solid var(--paper-line);
+    border-radius:6px;
+    padding:20px;
+  }
+  @media(min-width:640px){ main.sheet{padding:26px 28px;} }
+
+  h2.section-title{
+    font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+    font-size:1.05rem;font-weight:600;margin:0 0 14px;
+  }
+  h3.sub-title{
+    font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+    font-size:0.92rem;font-weight:600;margin:0 0 10px;
+  }
+
+  .row-flex{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;}
+  .field-pair{display:flex;gap:8px;flex:1;min-width:0;}
+  .field-pair > div{min-width:0;}
+  .field-pair > div:first-child{flex:2;}
+  .field-pair > div:last-child{flex:0 0 84px;}
+  .field-pair select, .field-pair input{width:100%;height:38px;}
+  label{display:block;font-size:0.72rem;color:var(--ink-soft);margin-bottom:4px;font-weight:500;}
+  input, select{
+    font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+    font-size:0.9rem;
+    padding:8px 9px;
+    border:1px solid var(--paper-line);
+    border-radius:var(--radius);
+    background:var(--paper-raised);
+    color:var(--ink);
+  }
+  input:focus, select:focus{outline:2px solid var(--install);outline-offset:1px;}
+  input[type=number]{width:80px;}
+
+  .btn{
+    font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+    font-weight:600;font-size:0.85rem;
+    background:var(--btn-bg);color:var(--btn-text);border:none;
+    padding:9px 16px;border-radius:var(--radius);cursor:pointer;
+    display:inline-block;
+  }
+  .btn:hover{opacity:0.88;}
+  .btn.secondary{background:transparent;color:var(--ink);border:1px solid var(--ink);}
+  .btn.wide{width:100%;text-align:center;}
+  button.icon-del{
+    background:none;border:none;color:var(--danger);cursor:pointer;
+    font-size:1rem;padding:2px 6px;
+  }
+  button.icon-del:hover{text-decoration:underline;}
+  button.icon-edit{
+    background:none;border:none;color:var(--install);cursor:pointer;
+    font-size:1rem;padding:2px 6px;
+  }
+  button.icon-edit:hover{text-decoration:underline;}
+
+  .confirm-overlay{
+    position:fixed;inset:0;background:rgba(0,0,0,0.45);
+    display:flex;align-items:center;justify-content:center;z-index:1000;padding:16px;
+  }
+  .confirm-box{
+    background:var(--card-bg);color:var(--ink);border:1px solid var(--paper-line);
+    border-radius:8px;padding:20px 22px;max-width:320px;width:100%;
+    box-shadow:0 10px 30px rgba(0,0,0,0.25);
+  }
+  .confirm-box p{margin:0 0 16px;font-size:0.9rem;line-height:1.4;}
+  .confirm-actions{display:flex;justify-content:flex-end;gap:8px;}
+
+  .toast{
+    position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(12px);
+    background:var(--money);color:#fff;font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+    font-weight:600;font-size:0.85rem;padding:11px 20px;border-radius:6px;
+    box-shadow:0 6px 18px rgba(0,0,0,0.2);opacity:0;transition:opacity 0.25s ease, transform 0.25s ease;
+    z-index:1100;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  .search-icon-wrap{position:relative;max-width:320px;}
+  .search-icon-wrap .icon{
+    position:absolute;left:10px;top:50%;transform:translateY(-50%);
+    font-size:0.85rem;color:var(--ink-soft);pointer-events:none;
+  }
+  .search-icon-wrap input{padding-left:30px;width:100%;}
+
+  .top-flex{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:18px;margin-bottom:20px;}
+
+  .double-note{
+    display:inline-block;margin-top:8px;font-size:0.78rem;font-weight:600;
+    color:var(--adicional);background:var(--adicional-bg);
+    padding:5px 9px;border-radius:var(--radius);
+  }
+  .badge.portagem{background:var(--install-bg);color:var(--install);}
+  .badge.alimentacao{background:var(--suporte-bg);color:var(--suporte);}
+  .chk-row{display:flex;align-items:center;gap:8px;margin:12px 0;font-size:0.85rem;color:var(--ink);cursor:pointer;user-select:none;}
+  .chk-row input{width:auto;cursor:pointer;}
+  input[type=file]{padding:6px;max-width:100%;font-size:0.8rem;}
+  .receipt-box{background:var(--card-bg);border:1px solid var(--paper-line);border-radius:8px;padding:14px;max-width:min(560px,94vw);max-height:92vh;overflow:auto;}
+  .receipt-box img{display:block;max-width:100%;max-height:72vh;margin:0 auto 12px;}
+  .pdf-box{border:1px dashed var(--paper-line);border-radius:6px;padding:12px 14px;margin-top:6px;}
+  .week-nav{display:flex;gap:8px;flex-wrap:wrap;}
+  .week-nav .btn{padding:7px 12px;font-size:0.8rem;}
+  .week-label{margin-top:10px;font-size:0.85rem;color:var(--ink-soft);}
+  .bd-card .s{font-size:0.7rem;color:var(--ink-soft);margin-top:4px;}
+  .hist-link{cursor:pointer;}
+  .btn:disabled{opacity:0.5;cursor:default;}
+  .stamp{
+    border:2px dashed var(--money);
+    color:var(--money);
+    border-radius:8px;
+    padding:10px 18px;
+    transform:rotate(-2deg);
+    text-align:center;
+    font-family:ui-monospace,'SF Mono',Menlo,Consolas,'Liberation Mono',monospace;
+    min-width:150px;
+  }
+  .stamp .label{font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-size:0.68rem;letter-spacing:0.02em;color:var(--money);opacity:0.85;margin-bottom:2px;}
+  .stamp .val{font-size:1.5rem;font-weight:600;}
+
+  table{width:100%;border-collapse:collapse;font-size:0.88rem;margin-top:6px;}
+  .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:6px;}
+  .table-scroll table{margin-top:0;min-width:460px;}
+  thead th{
+    text-align:left;font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-weight:600;
+    font-size:0.72rem;color:var(--ink-soft);
+    border-bottom:1px solid var(--ink);
+    padding:6px 8px;
+  }
+  tbody td{
+    padding:9px 8px;
+    border-bottom:1px solid var(--paper-line);
+    vertical-align:middle;
+  }
+  tbody tr:hover{background:var(--paper-raised);}
+  tbody tr.total-row td{border-top:2px solid var(--ink);border-bottom:none;font-weight:600;}
+  td.num, th.num{text-align:right;font-family:ui-monospace,'SF Mono',Menlo,Consolas,'Liberation Mono',monospace;}
+
+  .badge{
+    display:inline-block;font-size:0.7rem;font-weight:600;
+    padding:2px 8px;border-radius:20px;
+  }
+  .badge.instalacao{background:var(--install-bg);color:var(--install);}
+  .badge.suporte{background:var(--suporte-bg);color:var(--suporte);}
+  .badge.adicional{background:var(--adicional-bg);color:var(--adicional);}
+
+  .empty{color:var(--ink-soft);font-size:0.85rem;padding:16px 4px;font-style:italic;}
+
+  .hist-list{margin-top:8px;}
+  .hist-row{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:8px 4px;border-bottom:1px solid var(--paper-line);
+    font-size:0.87rem;cursor:pointer;
+  }
+  .hist-row:hover{background:var(--paper-raised);}
+  .hist-row .d{color:var(--ink-soft);}
+  .hist-row .v{font-family:ui-monospace,'SF Mono',Menlo,Consolas,'Liberation Mono',monospace;font-weight:600;color:var(--money);}
+
+  .divider{border:none;border-top:1px solid var(--paper-line);margin:22px 0;}
+
+  .breakdown{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0 6px;}
+  .bd-card{
+    flex:1;min-width:130px;
+    border:1px solid var(--paper-line);border-radius:6px;padding:10px 12px;
+  }
+  .bd-card .k{font-size:0.72rem;color:var(--ink-soft);margin-bottom:4px;}
+  .bd-card .v{font-family:ui-monospace,'SF Mono',Menlo,Consolas,'Liberation Mono',monospace;font-weight:600;font-size:1.05rem;}
+
+  .loading{padding:40px;text-align:center;color:var(--ink-soft);}
+  .service-form-grid{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:18px;}
+  .footnote{font-size:0.75rem;color:var(--ink-soft);margin-top:18px;}
+
+  .settings-block{max-width:420px;margin-bottom:30px;}
+  .theme-choice{display:flex;gap:10px;}
+  .theme-choice button{
+    flex:1;font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-weight:600;font-size:0.85rem;
+    padding:10px;border-radius:var(--radius);cursor:pointer;
+    border:1px solid var(--paper-line);background:var(--paper-raised);color:var(--ink);
+  }
+  .theme-choice button.active{border-color:var(--install);color:var(--install);background:var(--install-bg);}
+  .settings-error{
+    background:#F6E1DE;color:var(--danger);font-size:0.8rem;
+    padding:8px 10px;border-radius:var(--radius);margin:10px 0;
+  }
+  .settings-success{
+    background:var(--suporte-bg);color:var(--suporte);font-size:0.8rem;
+    padding:8px 10px;border-radius:var(--radius);margin:10px 0;
+  }
+
+  .auth-wrap{max-width:360px;margin:60px auto;padding:0 16px;}
+  .auth-card{
+    background:var(--card-bg);border:1px solid var(--paper-line);border-radius:6px;
+    padding:28px 26px;
+  }
+  .auth-top-bar{display:flex;justify-content:flex-end;margin-bottom:10px;}
+  .auth-card h1{
+    font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-size:1.3rem;margin:0 0 4px;
+  }
+  .auth-card .tagline{font-size:0.82rem;color:var(--ink-soft);margin-bottom:22px;}
+  .auth-field{margin-bottom:14px;}
+  .auth-field input{width:100%;}
+  .show-pass-row{
+    display:flex;align-items:center;gap:7px;margin:-4px 0 16px;
+    font-size:0.8rem;color:var(--ink-soft);cursor:pointer;user-select:none;
+  }
+  .show-pass-row input{width:auto;cursor:pointer;}
+  .auth-switch{
+    text-align:center;margin-top:16px;font-size:0.82rem;color:var(--ink-soft);
+  }
+  .auth-switch button{
+    background:none;border:none;color:var(--install);font-weight:600;cursor:pointer;
+    font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-size:0.82rem;text-decoration:underline;padding:0;
+  }
+  .auth-error{
+    background:#F6E1DE;color:var(--danger);font-size:0.8rem;
+    padding:8px 10px;border-radius:var(--radius);margin-bottom:14px;
+  }
+  .auth-info{
+    background:var(--suporte-bg);color:var(--suporte);font-size:0.8rem;
+    padding:8px 10px;border-radius:var(--radius);margin-bottom:14px;line-height:1.4;
+  }
+  .auth-note{font-size:0.72rem;color:var(--ink-soft);margin-top:18px;line-height:1.5;}
+
+  @media(max-width:640px){
+    .wrap{padding:14px 12px 50px;}
+    :root{--header-h:62px;}
+    .app-shell{display:flex;}
+    header.top{flex-direction:row;align-items:center;flex-wrap:nowrap;gap:10px;padding:10px 12px;}
+    header.top .user-box{width:auto;justify-content:flex-end;}
+    header.top .sub{display:none;}
+    header.top .user-box .who{max-width:110px;}
+    .menu-btn{display:inline-flex;}
+    .sidebar{width:52px;flex:0 0 52px;position:sticky;top:var(--header-h);padding:14px 6px 20px;height:calc(100vh - var(--header-h));z-index:900;}
+    .tab-label{display:none;}
+    nav.tabs button{justify-content:center;padding:10px 0;}
+    body.menu-open nav.tabs{
+      position:fixed;top:var(--header-h);left:0;bottom:0;width:min(270px,85vw);
+      background:var(--card-bg);border-right:1px solid var(--paper-line);
+      padding:14px;z-index:900;overflow-y:auto;
+    }
+    body.menu-open .tab-label{display:inline;}
+    body.menu-open nav.tabs button{justify-content:flex-start;padding:10px 14px;}
+    body.menu-open .side-backdrop{
+      display:block;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:800;
+    }
+    nav.tabs button{font-size:0.92rem;}
+    main.sheet{padding:16px 14px;}
+    h2.section-title{font-size:0.98rem;}
+
+    .top-flex{flex-direction:row;flex-wrap:nowrap;justify-content:space-between;align-items:flex-start;gap:10px;}
+    .top-flex > div:first-child{flex:1;min-width:0;}
+    .stamp{flex-shrink:0;padding:6px 10px;min-width:auto;transform:rotate(0deg);}
+    .stamp .label{font-size:0.58rem;}
+    .stamp .val{font-size:1.05rem;}
+
+    .row-flex, .service-form-grid{flex-direction:column;align-items:stretch;}
+    .row-flex > div, .service-form-grid > div{width:100%;}
+    .row-flex select, .row-flex input,
+    .service-form-grid select, .service-form-grid input{width:100%;}
+    input[type=number]{width:100%;}
+    .row-flex > button.btn, .service-form-grid > button.btn{width:100%;}
+
+    input, select{font-size:16px;}
+
+    .breakdown{gap:8px;}
+    .bd-card{min-width:100px;}
+
+    .search-icon-wrap{max-width:100%;}
+
+    .auth-wrap{margin:24px auto;}
+    .auth-card{padding:22px 18px;}
+
+    .confirm-box{max-width:100%;}
+    .confirm-actions{flex-direction:column-reverse;gap:8px;}
+    .confirm-actions button{width:100%;}
+
+    .settings-block{max-width:100%;}
+  }
+</style>
+</head>
+<body>
+<div id="root"><div class="loading">A carregar…<br><small>Se esta mensagem não desaparecer, atualiza a página (Ctrl+F5).</small></div></div>
+<noscript><div class="loading">Esta aplicação precisa de JavaScript ativo.</div></noscript>
+
+<script>
+// protecao contra clickjacking: nao corre dentro de iframes de outros sites
+if(window.top !== window.self){ document.documentElement.innerHTML = ''; throw new Error('framed'); }
+
+window.storage = {
+  async get(key){
+    const v = localStorage.getItem(key);
+    return v === null ? null : { key, value: v, shared: false };
+  },
+  async set(key, value){
+    localStorage.setItem(key, value);
+    return { key, value, shared: false };
+  },
+  async delete(key){
+    const existed = localStorage.getItem(key) !== null;
+    localStorage.removeItem(key);
+    return { key, deleted: existed, shared: false };
+  },
+  async list(prefix){
+    const keys = Object.keys(localStorage).filter(k => !prefix || k.startsWith(prefix));
+    return { keys, prefix, shared: false };
+  }
+};
+
+const TRANSLATIONS = {
+  tagline: {pt:'Instalações · Suportes · Adicionais', en:'Installations · Support · Add-ons', es:'Instalaciones · Soportes · Adicionales', fr:'Installations · Supports · Suppléments'},
+  tabDiario: {pt:'Registo diário', en:'Daily log', es:'Registro diario', fr:'Registre journalier'},
+  tabServicos: {pt:'Serviços e preços', en:'Services & prices', es:'Servicios y precios', fr:'Services et prix'},
+  tabMensal: {pt:'Resumo mensal', en:'Monthly summary', es:'Resumen mensual', fr:'Résumé mensuel'},
+  tabDefinicoes: {pt:'Definições', en:'Settings', es:'Ajustes', fr:'Paramètres'},
+  logout: {pt:'Sair', en:'Log out', es:'Salir', fr:'Déconnexion'},
+
+  dateLabel: {pt:'Data do registo', en:'Log date', es:'Fecha del registro', fr:"Date de l'enregistrement"},
+  totalDoDia: {pt:'total do dia', en:"today's total", es:'total del día', fr:'total du jour'},
+  addServiceHeading: {pt:'Adicionar serviço', en:'Add service', es:'Añadir servicio', fr:'Ajouter un service'},
+  noServicesMsg: {pt:'Ainda não tens serviços definidos. Vai a "Serviços e preços" para criar o primeiro.', en:'You don\u2019t have any services yet. Go to "Services & prices" to create the first one.', es:'Todavía no tienes servicios definidos. Ve a "Servicios y precios" para crear el primero.', fr:"Tu n'as pas encore de services. Va dans « Services et prix » pour créer le premier."},
+  serviceLabel: {pt:'Serviço', en:'Service', es:'Servicio', fr:'Service'},
+  quantityLabel: {pt:'Quantidade', en:'Quantity', es:'Cantidad', fr:'Quantité'},
+  addBtn: {pt:'Adicionar', en:'Add', es:'Añadir', fr:'Ajouter'},
+  registeredServicesHeading: {pt:'Serviços registados', en:'Logged services', es:'Servicios registrados', fr:'Services enregistrés'},
+  thQty: {pt:'Qtd', en:'Qty', es:'Cant.', fr:'Qté'},
+  thPrice: {pt:'Preço', en:'Price', es:'Precio', fr:'Prix'},
+  thSubtotal: {pt:'Subtotal', en:'Subtotal', es:'Subtotal', fr:'Sous-total'},
+  noEntriesMsg: {pt:'Ainda não há serviços registados neste dia.', en:'No services logged for this day yet.', es:'Todavía no hay servicios registrados este día.', fr:'Aucun service enregistré ce jour pour le moment.'},
+  editTitle: {pt:'Editar', en:'Edit', es:'Editar', fr:'Modifier'},
+  removeTitle: {pt:'Remover', en:'Remove', es:'Eliminar', fr:'Supprimer'},
+  saveBtn: {pt:'Guardar', en:'Save', es:'Guardar', fr:'Enregistrer'},
+  cancelBtn: {pt:'Cancelar', en:'Cancel', es:'Cancelar', fr:'Annuler'},
+  dailySumHeading: {pt:'Soma diário', en:'Daily sum', es:'Suma diaria', fr:'Somme du jour'},
+  searchServiceTypePlaceholder: {pt:'Pesquisar por tipo de serviço (Instalação, Suporte, Adicional)', en:'Search by service type (Installation, Support, Add-on)', es:'Buscar por tipo de servicio (Instalación, Soporte, Adicional)', fr:'Rechercher par type de service (Installation, Support, Supplément)'},
+  thQtyTotal: {pt:'Qtd total', en:'Total qty', es:'Cant. total', fr:'Qté totale'},
+  thValueTotal: {pt:'Valor total', en:'Total value', es:'Valor total', fr:'Valeur totale'},
+  noSearchResultsMsg: {pt:'Nenhum serviço encontrado para essa pesquisa.', en:'No service found for that search.', es:'No se encontró ningún servicio para esa búsqueda.', fr:'Aucun service trouvé pour cette recherche.'},
+  noDataSummaryMsg: {pt:'Sem dados para resumir.', en:'No data to summarize.', es:'Sin datos para resumir.', fr:'Aucune donnée à résumer.'},
+  totalDoDiaRow: {pt:'Total do dia', en:'Day total', es:'Total del día', fr:'Total du jour'},
+  previousDaysHeading: {pt:'Dias anteriores', en:'Previous days', es:'Días anteriores', fr:'Jours précédents'},
+  searchDayLabel: {pt:'Pesquisar por dia', en:'Search by day', es:'Buscar por día', fr:'Rechercher par jour'},
+  searchDayPlaceholder: {pt:'ex: 10 set, setembro...', en:'e.g. Sep 10, September...', es:'ej: 10 sep, septiembre...', fr:'ex: 10 sept, septembre...'},
+  noDayFoundMsg: {pt:'Nenhum dia encontrado para essa pesquisa.', en:'No day found for that search.', es:'No se encontró ningún día para esa búsqueda.', fr:'Aucun jour trouvé pour cette recherche.'},
+
+  footnote: {pt:'Alterar um preço aqui só afeta novos registos — os dias já lançados mantêm o valor original.', en:'Changing a price here only affects new entries — days already logged keep the original value.', es:'Cambiar un precio aquí solo afecta a nuevos registros — los días ya registrados mantienen el valor original.', fr:"Modifier un prix ici n'affecte que les nouvelles entrées — les jours déjà enregistrés conservent la valeur d'origine."},
+  thName: {pt:'Nome', en:'Name', es:'Nombre', fr:'Nom'},
+  thCategory: {pt:'Categoria', en:'Category', es:'Categoría', fr:'Catégorie'},
+  noServicesDefinedMsg: {pt:'Sem serviços definidos.', en:'No services defined.', es:'Sin servicios definidos.', fr:'Aucun service défini.'},
+  newServiceHeading: {pt:'Novo serviço', en:'New service', es:'Nuevo servicio', fr:'Nouveau service'},
+  namePlaceholder: {pt:'ex: Instalação FTTH empresarial', en:'e.g. Business FTTH installation', es:'ej: Instalación FTTH empresarial', fr:'ex: Installation FTTH professionnelle'},
+  priceLabel: {pt:'Preço (€)', en:'Price (€)', es:'Precio (€)', fr:'Prix (€)'},
+
+  monthlyHeading: {pt:'Resumo do mês', en:'Month summary', es:'Resumen del mes', fr:'Résumé du mois'},
+  monthLabel: {pt:'Mês', en:'Month', es:'Mes', fr:'Mois'},
+  totalDoMes: {pt:'total do mês', en:"month's total", es:'total del mes', fr:'total du mois'},
+  catInstalacoesPlural: {pt:'Instalações', en:'Installations', es:'Instalaciones', fr:'Installations'},
+  catSuportesPlural: {pt:'Suportes', en:'Support', es:'Soportes', fr:'Supports'},
+  catAdicionaisPlural: {pt:'Adicionais', en:'Add-ons', es:'Adicionales', fr:'Suppléments'},
+  monthSumHeading: {pt:'Soma do mês por serviço', en:'Monthly sum by service', es:'Suma del mes por servicio', fr:'Somme du mois par service'},
+  totalDoMesRow: {pt:'Total do mês', en:'Month total', es:'Total del mes', fr:'Total du mois'},
+
+  catInstalacao: {pt:'Instalação', en:'Installation', es:'Instalación', fr:'Installation'},
+  catSuporte: {pt:'Suporte', en:'Support', es:'Soporte', fr:'Support'},
+  catAdicional: {pt:'Adicional', en:'Add-on', es:'Adicional', fr:'Supplément'},
+
+  loginTagline: {pt:'Entra na tua conta para veres o teu registo.', en:'Log in to see your log.', es:'Inicia sesión para ver tu registro.', fr:'Connecte-toi pour voir ton registre.'},
+  registerTagline: {pt:'Cria uma conta para começares a registar os teus serviços.', en:'Create an account to start logging your services.', es:'Crea una cuenta para empezar a registrar tus servicios.', fr:'Crée un compte pour commencer à enregistrer tes services.'},
+  userLabel: {pt:'Utilizador', en:'Username', es:'Usuario', fr:'Utilisateur'},
+  passwordLabel: {pt:'Password', en:'Password', es:'Contraseña', fr:'Mot de passe'},
+  confirmPasswordLabel: {pt:'Confirmar password', en:'Confirm password', es:'Confirmar contraseña', fr:'Confirmer le mot de passe'},
+  showPasswordLabel: {pt:'Mostrar password', en:'Show password', es:'Mostrar contraseña', fr:'Afficher le mot de passe'},
+  loginBtn: {pt:'Entrar', en:'Log in', es:'Entrar', fr:'Se connecter'},
+  registerBtn: {pt:'Criar conta', en:'Create account', es:'Crear cuenta', fr:'Créer un compte'},
+  busyBtn: {pt:'Aguarda…', en:'Please wait…', es:'Espera…', fr:'Patiente…'},
+  noAccountQ: {pt:'Ainda não tens conta?', en:"Don't have an account yet?", es:'¿Todavía no tienes cuenta?', fr:"Tu n'as pas encore de compte\u00a0?"},
+  hasAccountQ: {pt:'Já tens conta?', en:'Already have an account?', es:'¿Ya tienes cuenta?', fr:'Tu as déjà un compte\u00a0?'},
+  authNote: {pt:'Sistema de contas simples para separar os dados de cada pessoa — não uses uma password que uses noutros sítios importantes.', en:"Simple account system to keep everyone's data separate — don't reuse a password you use elsewhere for important things.", es:'Sistema de cuentas simple para separar los datos de cada persona — no uses una contraseña que uses en otros sitios importantes.', fr:"Système de comptes simple pour séparer les données de chacun — n'utilise pas un mot de passe que tu utilises ailleurs pour des choses importantes."},
+
+  errUsernameLength: {pt:'O utilizador deve ter pelo menos 3 caracteres (letras, números, "_").', en:'The username must be at least 3 characters (letters, numbers, "_").', es:'El usuario debe tener al menos 3 caracteres (letras, números, "_").', fr:'Le nom d\u2019utilisateur doit comporter au moins 3 caractères (lettres, chiffres, "_").'},
+  errPasswordLength: {pt:'A password deve ter pelo menos 4 caracteres.', en:'The password must be at least 4 characters.', es:'La contraseña debe tener al menos 4 caracteres.', fr:'Le mot de passe doit comporter au moins 4 caractères.'},
+  errPasswordMismatch: {pt:'As passwords não coincidem.', en:"Passwords don't match.", es:'Las contraseñas no coinciden.', fr:'Les mots de passe ne correspondent pas.'},
+  errUsernameTaken: {pt:'Já existe uma conta com esse nome de utilizador.', en:'An account with that username already exists.', es:'Ya existe una cuenta con ese nombre de usuario.', fr:'Un compte avec ce nom d\u2019utilisateur existe déjà.'},
+  errWrongCredentials: {pt:'Utilizador ou password incorretos.', en:'Incorrect username or password.', es:'Usuario o contraseña incorrectos.', fr:'Utilisateur ou mot de passe incorrect.'},
+  errRequiredFields: {pt:'Preenche todos os campos obrigatórios.', en:'Fill in all required fields.', es:'Rellena todos los campos obligatorios.', fr:'Remplis tous les champs obligatoires.'},
+  errEmailInvalid: {pt:'Indica um email válido.', en:'Enter a valid email.', es:'Indica un correo válido.', fr:'Indique un e-mail valide.'},
+  errPhoneInvalid: {pt:'Indica um número de telemóvel válido.', en:'Enter a valid phone number.', es:'Indica un número de teléfono válido.', fr:'Indique un numéro de téléphone valide.'},
+  errContactMismatch: {pt:'Não encontrámos nenhuma conta com esses dados.', en:"We couldn't find an account with that information.", es:'No encontramos ninguna cuenta con esos datos.', fr:"Nous n'avons trouvé aucun compte avec ces informations."},
+  errCodeWrong: {pt:'Código incorreto.', en:'Incorrect code.', es:'Código incorrecto.', fr:'Code incorrect.'},
+
+  firstNameLabel: {pt:'Nome', en:'First name', es:'Nombre', fr:'Prénom'},
+  lastNameLabel: {pt:'Apelido', en:'Last name', es:'Apellido', fr:'Nom de famille'},
+  emailLabel: {pt:'Email', en:'Email', es:'Correo electrónico', fr:'E-mail'},
+  phoneLabel: {pt:'Nº de telemóvel', en:'Phone number', es:'Número de teléfono', fr:'Numéro de téléphone'},
+
+  forgotPasswordLink: {pt:'Esqueceste-te da password?', en:'Forgot your password?', es:'¿Olvidaste tu contraseña?', fr:'Mot de passe oublié\u00a0?'},
+  backToLoginLink: {pt:'Voltar ao login', en:'Back to login', es:'Volver al inicio de sesión', fr:'Retour à la connexion'},
+  recoverMethodTagline: {pt:'Como queres recuperar a tua password?', en:'How would you like to recover your password?', es:'¿Cómo quieres recuperar tu contraseña?', fr:'Comment veux-tu récupérer ton mot de passe\u00a0?'},
+  recoverByEmail: {pt:'Por email', en:'By email', es:'Por correo electrónico', fr:'Par e-mail'},
+  recoverByPhone: {pt:'Por telemóvel', en:'By phone', es:'Por teléfono', fr:'Par téléphone'},
+  recoverContactTaglineEmail: {pt:'Indica o teu utilizador e o email associado à conta.', en:'Enter your username and the email linked to your account.', es:'Indica tu usuario y el correo asociado a la cuenta.', fr:"Indique ton nom d'utilisateur et l'e-mail associé au compte."},
+  recoverContactTaglinePhone: {pt:'Indica o teu utilizador e o nº de telemóvel associado à conta.', en:'Enter your username and the phone number linked to your account.', es:'Indica tu usuario y el número de teléfono asociado a la cuenta.', fr:"Indique ton nom d'utilisateur et le numéro de téléphone associé au compte."},
+  recoverCodeTagline: {pt:'Este sistema não tem servidor de email/SMS ligado, por isso mostramos o código de recuperação aqui (normalmente seria enviado por email ou SMS).', en:"This system isn't connected to an email/SMS server, so the recovery code is shown here directly (it would normally be sent by email or SMS).", es:'Este sistema no tiene un servidor de correo/SMS conectado, por lo que el código de recuperación se muestra aquí directamente (normalmente se enviaría por correo o SMS).', fr:"Ce système n'est pas relié à un serveur d'e-mail/SMS, le code de récupération est donc affiché ici directement (il serait normalement envoyé par e-mail ou SMS)."},
+  recoverCodeLabel: {pt:'Código de recuperação', en:'Recovery code', es:'Código de recuperación', fr:'Code de récupération'},
+  enterCodeLabel: {pt:'Introduz o código', en:'Enter the code', es:'Introduce el código', fr:'Entre le code'},
+  verifyCodeBtn: {pt:'Verificar código', en:'Verify code', es:'Verificar código', fr:'Vérifier le code'},
+  continueBtn: {pt:'Continuar', en:'Continue', es:'Continuar', fr:'Continuer'},
+  resetPasswordBtn: {pt:'Repor password', en:'Reset password', es:'Restablecer contraseña', fr:'Réinitialiser le mot de passe'},
+  recoverResetTagline: {pt:'Define a tua nova password.', en:'Set your new password.', es:'Define tu nueva contraseña.', fr:'Définis ton nouveau mot de passe.'},
+  toastPasswordReset: {pt:'Password reposta com sucesso! Já podes entrar.', en:'Password reset successfully! You can now log in.', es:'¡Contraseña restablecida con éxito! Ya puedes entrar.', fr:'Mot de passe réinitialisé avec succès\u00a0! Tu peux maintenant te connecter.'},
+
+  confirmDeleteRecord: {pt:'Tens a certeza que queres eliminar este registo?', en:'Are you sure you want to delete this entry?', es:'¿Seguro que quieres eliminar este registro?', fr:'Es-tu sûr de vouloir supprimer cet enregistrement\u00a0?'},
+  confirmDeleteService: {pt:'Tens a certeza que queres eliminar este serviço?', en:'Are you sure you want to delete this service?', es:'¿Seguro que quieres eliminar este servicio?', fr:'Es-tu sûr de vouloir supprimer ce service\u00a0?'},
+  confirmDelete: {pt:'Eliminar', en:'Delete', es:'Eliminar', fr:'Supprimer'},
+
+  toastServiceRegistered: {pt:'Serviço registado com sucesso!', en:'Service logged successfully!', es:'¡Servicio registrado con éxito!', fr:'Service enregistré avec succès\u00a0!'},
+  toastRecordUpdated: {pt:'Registo atualizado com sucesso!', en:'Entry updated successfully!', es:'¡Registro actualizado con éxito!', fr:'Enregistrement mis à jour avec succès\u00a0!'},
+  toastServiceUpdated: {pt:'Serviço atualizado com sucesso!', en:'Service updated successfully!', es:'¡Servicio actualizado con éxito!', fr:'Service mis à jour avec succès\u00a0!'},
+  toastPasswordChanged: {pt:'Password alterada com sucesso!', en:'Password changed successfully!', es:'¡Contraseña cambiada con éxito!', fr:'Mot de passe modifié avec succès\u00a0!'},
+
+  settingsHeading: {pt:'Definições', en:'Settings', es:'Ajustes', fr:'Paramètres'},
+  appearanceHeading: {pt:'Aparência', en:'Appearance', es:'Apariencia', fr:'Apparence'},
+  themeLight: {pt:'☀️ Claro', en:'☀️ Light', es:'☀️ Claro', fr:'☀️ Clair'},
+  themeDark: {pt:'🌙 Escuro', en:'🌙 Dark', es:'🌙 Oscuro', fr:'🌙 Sombre'},
+  changePasswordHeading: {pt:'Mudar password', en:'Change password', es:'Cambiar contraseña', fr:'Changer le mot de passe'},
+  currentPasswordLabel: {pt:'Password atual', en:'Current password', es:'Contraseña actual', fr:'Mot de passe actuel'},
+  newPasswordLabel: {pt:'Nova password', en:'New password', es:'Nueva contraseña', fr:'Nouveau mot de passe'},
+  confirmNewPasswordLabel: {pt:'Confirmar nova password', en:'Confirm new password', es:'Confirmar nueva contraseña', fr:'Confirmer le nouveau mot de passe'},
+  changePasswordBtn: {pt:'Alterar password', en:'Change password', es:'Cambiar contraseña', fr:'Changer le mot de passe'},
+  languageHeading: {pt:'Idioma', en:'Language', es:'Idioma', fr:'Langue'},
+  errCurrentPasswordWrong: {pt:'A password atual está incorreta.', en:'The current password is incorrect.', es:'La contraseña actual es incorrecta.', fr:'Le mot de passe actuel est incorrect.'},
+  editAccountHeading: {pt:'Editar conta', en:'Edit account', es:'Editar cuenta', fr:'Modifier le compte'},
+  saveChangesBtn: {pt:'Guardar alterações', en:'Save changes', es:'Guardar cambios', fr:'Enregistrer les modifications'},
+  toastAccountUpdated: {pt:'Conta atualizada com sucesso!', en:'Account updated successfully!', es:'¡Cuenta actualizada con éxito!', fr:'Compte mis à jour avec succès\u00a0!'}
+};
+const TRANSLATIONS_TS = {
+  tagline: `Ku vekela · Nseketelo · Swo engetela`,
+  tabDiario: `Rhijisitara ra siku`,
+  tabServicos: `Tinsevho na ntsengo`,
+  tabMensal: `Nkatsakanyo wa n'hweti`,
+  tabDefinicoes: `Ku lulamisa`,
+  logout: `Huma`,
+  dateLabel: `Siku ra rhijisitara`,
+  totalDoDia: `nhlayo ya siku`,
+  addServiceHeading: `Engetela nsevho`,
+  noServicesMsg: `U nga si va na tinsevho. Ya eka "Tinsevho na ntsengo" ku tumbuluxa wo sungula.`,
+  serviceLabel: `Nsevho`,
+  quantityLabel: `Nhlayo`,
+  addBtn: `Engetela`,
+  registeredServicesHeading: `Tinsevho leti rhijisitariweke`,
+  thQty: `Nhl.`,
+  thPrice: `Ntsengo`,
+  thSubtotal: `Nhlayo ya xiphemu`,
+  noEntriesMsg: `A ku na tinsevho leti rhijisitariweke hi siku leri.`,
+  editTitle: `Cinca`,
+  removeTitle: `Susa`,
+  saveBtn: `Hlayisa`,
+  cancelBtn: `Khansela`,
+  dailySumHeading: `Nhlayo ya siku`,
+  searchServiceTypePlaceholder: `Lava hi muxaka wa nsevho (Ku vekela, Nseketelo, Xo engetela)`,
+  thQtyTotal: `Nhlayo hinkwayo`,
+  thValueTotal: `Nkoka hinkwawo`,
+  noSearchResultsMsg: `A ku kumiwanga nsevho eka ku lava loku.`,
+  noDataSummaryMsg: `A ku na vuxokoxoko byo katsakanya.`,
+  totalDoDiaRow: `Nhlayo hinkwayo ya siku`,
+  previousDaysHeading: `Masiku lama hundzeke`,
+  searchDayLabel: `Lava hi siku`,
+  searchDayPlaceholder: `xik: 10 Sep, Sepitemba...`,
+  noDayFoundMsg: `A ku kumiwanga siku eka ku lava loku.`,
+  footnote: `Ku cinca ntsengo laha ku khumba ntsena swirhijisitara leswintshwa — masiku lama nga rhijisitariwa ma hlayisa nkoka wa khale.`,
+  thName: `Vito`,
+  thCategory: `Xiyenge`,
+  noServicesDefinedMsg: `A ku na tinsevho leti vekiweke.`,
+  newServiceHeading: `Nsevho lowuntshwa`,
+  namePlaceholder: `xik: Ku vekela FTTH ya bindzu`,
+  priceLabel: `Ntsengo (€)`,
+  monthlyHeading: `Nkatsakanyo wa n'hweti`,
+  monthLabel: `N'hweti`,
+  totalDoMes: `nhlayo ya n'hweti`,
+  catInstalacoesPlural: `Ku vekela`,
+  catSuportesPlural: `Nseketelo`,
+  catAdicionaisPlural: `Swo engetela`,
+  monthSumHeading: `Nhlayo ya n'hweti hi nsevho`,
+  totalDoMesRow: `Nhlayo hinkwayo ya n'hweti`,
+  catInstalacao: `Ku vekela`,
+  catSuporte: `Nseketelo`,
+  catAdicional: `Xo engetela`,
+  loginTagline: `Nghena eka akhawunti ya wena ku vona rhijisitara ya wena.`,
+  registerTagline: `Tumbuluxa akhawunti ku sungula ku rhijisitara tinsevho ta wena.`,
+  userLabel: `Vito ra mutirhisi`,
+  passwordLabel: `Phasiwedi`,
+  confirmPasswordLabel: `Tiyisisa phasiwedi`,
+  showPasswordLabel: `Kombisa phasiwedi`,
+  loginBtn: `Nghena`,
+  registerBtn: `Tumbuluxa akhawunti`,
+  busyBtn: `Rindza…`,
+  noAccountQ: `U nga si va na akhawunti?`,
+  hasAccountQ: `Se u na akhawunti?`,
+  authNote: `Mfumo lowu olovaka wa tiakhawunti ku hambanisa data ya munhu un'wana na un'wana — u nga tirhisi phasiwedi leyi u yi tirhisaka kun'wana ka swilo swa nkoka.`,
+  errUsernameLength: `Vito ra mutirhisi ri fanele ri sungula hi swivumbeko swa 3 (tiletere, tinomboro, "_").`,
+  errPasswordLength: `Phasiwedi yi fanele yi va na swivumbeko swa 4 kumbe ku tlula.`,
+  errPasswordMismatch: `Tiphasiwedi a ti fani.`,
+  errUsernameTaken: `Akhawunti leyi nga na vito leri ya ha ri kona.`,
+  errWrongCredentials: `Vito ra mutirhisi kumbe phasiwedi swi hoxile.`,
+  errRequiredFields: `Tata masimu hinkwawo lama lavekaka.`,
+  errEmailInvalid: `Nghenisa imeyili leyi tirhaka.`,
+  errPhoneInvalid: `Nghenisa nomboro ya riqingho leyi tirhaka.`,
+  errContactMismatch: `A hi kumanga akhawunti leyi nga na vuxokoxoko lebyi.`,
+  errCodeWrong: `Khodi yi hoxile.`,
+  firstNameLabel: `Vito`,
+  lastNameLabel: `Vito ra ndyangu`,
+  emailLabel: `Imeyili`,
+  phoneLabel: `Nomboro ya riqingho`,
+  forgotPasswordLink: `U rivele phasiwedi?`,
+  backToLoginLink: `Tlhelela eka ku nghena`,
+  recoverMethodTagline: `U lava ku kuma phasiwedi ya wena hi ndlela yihi?`,
+  recoverByEmail: `Hi imeyili`,
+  recoverByPhone: `Hi riqingho`,
+  recoverContactTaglineEmail: `Nghenisa vito ra mutirhisi na imeyili leyi tshameke na akhawunti.`,
+  recoverContactTaglinePhone: `Nghenisa vito ra mutirhisi na nomboro ya riqingho leyi tshameke na akhawunti.`,
+  recoverCodeTagline: `Mfumo lowu a wu hlanganisiwanga na sevha ya imeyili/SMS, kutani khodi yi kombisiwa laha hi ku kongoma (hi ntolovelo a yi ta rhumeriwa hi imeyili kumbe SMS).`,
+  recoverCodeLabel: `Khodi yo kuma phasiwedi`,
+  enterCodeLabel: `Nghenisa khodi`,
+  verifyCodeBtn: `Tiyisisa khodi`,
+  continueBtn: `Ya emahlweni`,
+  resetPasswordBtn: `Tlhela u vekela phasiwedi`,
+  recoverResetTagline: `Vekela phasiwedi leyintshwa.`,
+  toastPasswordReset: `Phasiwedi yi tlheleriwile hi ku humelela! Sweswi u nga nghena.`,
+  confirmDeleteRecord: `Xana u tiyisile leswaku u lava ku susa rhijisitara leyi?`,
+  confirmDeleteService: `Xana u tiyisile leswaku u lava ku susa nsevho lowu?`,
+  confirmDelete: `Susa`,
+  toastServiceRegistered: `Nsevho wu rhijisitariwile hi ku humelela!`,
+  toastRecordUpdated: `Rhijisitara yi antswisiwile hi ku humelela!`,
+  toastServiceUpdated: `Nsevho wu antswisiwile hi ku humelela!`,
+  toastPasswordChanged: `Phasiwedi yi hundzuriwile hi ku humelela!`,
+  settingsHeading: `Ku lulamisa`,
+  appearanceHeading: `Ndlela yo languteka`,
+  themeLight: `☀️ Ku vonakala`,
+  themeDark: `🌙 Munyama`,
+  changePasswordHeading: `Cinca phasiwedi`,
+  currentPasswordLabel: `Phasiwedi ya sweswi`,
+  newPasswordLabel: `Phasiwedi leyintshwa`,
+  confirmNewPasswordLabel: `Tiyisisa phasiwedi leyintshwa`,
+  changePasswordBtn: `Cinca phasiwedi`,
+  languageHeading: `Ririmi`,
+  errCurrentPasswordWrong: `Phasiwedi ya sweswi yi hoxile.`,
+  editAccountHeading: `Cinca akhawunti`,
+  saveChangesBtn: `Hlayisa leswi cinciweke`,
+  toastAccountUpdated: `Akhawunti yi antswisiwile hi ku humelela!`
+};
+Object.assign(TRANSLATIONS, {
+  changePhotoTitle: {pt:'Alterar foto', en:'Change photo', es:'Cambiar foto', fr:'Changer la photo'}
+});
+TRANSLATIONS_TS.changePhotoTitle = `Cinca foto`;
+
+Object.assign(TRANSLATIONS, {
+  errPasswordLength: {pt:`A password deve ter pelo menos 8 caracteres, com letras e números.`, en:`The password must be at least 8 characters, with letters and numbers.`, es:`La contraseña debe tener al menos 8 caracteres, con letras y números.`, fr:`Le mot de passe doit comporter au moins 8 caractères, avec des lettres et des chiffres.`},
+  errEmailTaken: {pt:`Já existe uma conta com este email.`, en:`An account with this email already exists.`, es:`Ya existe una cuenta con este correo.`, fr:`Un compte avec cet e-mail existe déjà.`},
+  errEmailNotConfirmed: {pt:`Confirma primeiro o teu email (verifica a caixa de entrada).`, en:`Please confirm your email first (check your inbox).`, es:`Confirma primero tu correo (revisa la bandeja de entrada).`, fr:`Confirme d’abord ton e-mail (vérifie ta boîte de réception).`},
+  errRateLimit: {pt:`Demasiados pedidos. Espera um pouco e tenta outra vez.`, en:`Too many requests. Wait a moment and try again.`, es:`Demasiadas solicitudes. Espera un poco e inténtalo de nuevo.`, fr:`Trop de demandes. Attends un peu et réessaie.`},
+  errNetwork: {pt:`Sem ligação à internet ou ao servidor. Tenta outra vez.`, en:`No connection to the internet or the server. Try again.`, es:`Sin conexión a internet o al servidor. Inténtalo de nuevo.`, fr:`Pas de connexion à internet ou au serveur. Réessaie.`},
+  errGeneric: {pt:`Ocorreu um erro.`, en:`An error occurred.`, es:`Ocurrió un error.`, fr:`Une erreur est survenue.`},
+  errLinkExpired: {pt:`O link expirou ou já foi usado. Pede um novo.`, en:`The link has expired or was already used. Request a new one.`, es:`El enlace ha caducado o ya se usó. Solicita uno nuevo.`, fr:`Le lien a expiré ou a déjà été utilisé. Demande-en un nouveau.`},
+  confirmEmailMsg: {pt:`Conta criada! Enviámos um email para confirmares o teu endereço. Depois de confirmares, já podes entrar.`, en:`Account created! We sent you an email to confirm your address. Once confirmed, you can log in.`, es:`¡Cuenta creada! Te enviamos un correo para confirmar tu dirección. Una vez confirmado, ya puedes entrar.`, fr:`Compte créé ! Nous t’avons envoyé un e-mail pour confirmer ton adresse. Une fois confirmé, tu peux te connecter.`},
+  recoverEmailTagline: {pt:`Indica o email da tua conta e enviamos-te um link para definires uma nova password.`, en:`Enter your account email and we will send you a link to set a new password.`, es:`Indica el correo de tu cuenta y te enviaremos un enlace para definir una nueva contraseña.`, fr:`Indique l’e-mail de ton compte et nous t’enverrons un lien pour définir un nouveau mot de passe.`},
+  recoverSendBtn: {pt:`Enviar link`, en:`Send link`, es:`Enviar enlace`, fr:`Envoyer le lien`},
+  recoverSentMsg: {pt:`Se existir uma conta com esse email, enviámos-te um link para repor a password. Verifica a caixa de entrada e o spam.`, en:`If an account exists with that email, we sent you a link to reset your password. Check your inbox and spam folder.`, es:`Si existe una cuenta con ese correo, te enviamos un enlace para restablecer la contraseña. Revisa la bandeja de entrada y el spam.`, fr:`S’il existe un compte avec cet e-mail, nous t’avons envoyé un lien pour réinitialiser le mot de passe. Vérifie ta boîte de réception et les spams.`}
+});
+Object.assign(TRANSLATIONS_TS, {
+  errPasswordLength: `Phasiwedi yi fanele yi va na swivumbeko swa 8 kumbe ku tlula, na tiletere na tinomboro.`,
+  errEmailTaken: `Akhawunti leyi nga na imeyili leyi ya ha ri kona.`,
+  errEmailNotConfirmed: `Tiyisisa imeyili ya wena sweswo sungula (languta bokisi ra imeyili).`,
+  errRateLimit: `Swikombelo swo tala. Rindza kancani u tlhela u ringeta.`,
+  errNetwork: `A ku na ntwanano na inthanete kumbe sevha. Ringeta nakambe.`,
+  errGeneric: `Ku humelele xihoxo.`,
+  errLinkExpired: `Linki yi herile kumbe yi tirhisiwile sweswi. Kombela yintshwa.`,
+  confirmEmailMsg: `Akhawunti yi tumbuluxiwile! Hi ku rhumele imeyili ku tiyisisa adirese ya wena. Loko u tiyisisile, u nga nghena.`,
+  recoverEmailTagline: `Nghenisa imeyili ya akhawunti ya wena, hi ta ku rhumela linki ro vekela phasiwedi leyintshwa.`,
+  recoverSendBtn: `Rhumela linki`,
+  recoverSentMsg: `Loko ku ri na akhawunti leyi nga na imeyili leyi, hi ku rhumele linki ro tlhela u vekela phasiwedi. Languta bokisi ra imeyili na spam.`
+});
+
+
+Object.assign(TRANSLATIONS, {
+  errPhotoInvalid: {pt:`Escolhe uma imagem válida (até 10 MB).`, en:`Choose a valid image (up to 10 MB).`, es:`Elige una imagen válida (hasta 10 MB).`, fr:`Choisis une image valide (jusqu’à 10 Mo).`}
+});
+TRANSLATIONS_TS.errPhotoInvalid = `Hlawula foto leyi tirhaka (ku fika eka 10 MB).`;
+
+Object.assign(TRANSLATIONS, {
+  emailConfirmedMsg: {pt:`Email confirmado! A tua conta está pronta.`, en:`Email confirmed! Your account is ready.`, es:`¡Correo confirmado! Tu cuenta está lista.`, fr:`E-mail confirmé ! Ton compte est prêt.`},
+  emailConfirmedLoginMsg: {pt:`Email confirmado! Já podes entrar.`, en:`Email confirmed! You can now log in.`, es:`¡Correo confirmado! Ya puedes entrar.`, fr:`E-mail confirmé ! Tu peux te connecter.`}
+});
+TRANSLATIONS_TS.emailConfirmedMsg = `Imeyili yi tiyisisiwile! Akhawunti ya wena yi lunghekile.`;
+TRANSLATIONS_TS.emailConfirmedLoginMsg = `Imeyili yi tiyisisiwile! Sweswi u nga nghena.`;
+
+Object.assign(TRANSLATIONS, {
+  sundayNote: {pt:`Domingo: valor a dobrar automaticamente (×2).`, en:`Sunday: rate doubled automatically (×2).`, es:`Domingo: valor doble automático (×2).`, fr:`Dimanche : tarif doublé automatiquement (×2).`},
+  badgeSunday: {pt:`Domingo`, en:`Sunday`, es:`Domingo`, fr:`Dimanche`}
+});
+Object.assign(TRANSLATIONS_TS, {
+  sundayNote: `Sonto: nkoka wu phindhiwa hi ku tiyimela (×2).`,
+  badgeSunday: `Sonto`
+});
+
+Object.assign(TRANSLATIONS, {
+  tabSemanal: {pt:`Resumo semanal`, en:`Weekly summary`, es:`Resumen semanal`, fr:`Résumé hebdomadaire`},
+  weekTitle: {pt:`Resumo da semana`, en:`Week summary`, es:`Resumen de la semana`, fr:`Résumé de la semaine`},
+  weekWord: {pt:`Semana`, en:`Week`, es:`Semana`, fr:`Semaine`},
+  prevWeek: {pt:`‹ Anterior`, en:`‹ Previous`, es:`‹ Anterior`, fr:`‹ Précédente`},
+  nextWeek: {pt:`Seguinte ›`, en:`Next ›`, es:`Siguiente ›`, fr:`Suivante ›`},
+  thisWeek: {pt:`Esta semana`, en:`This week`, es:`Esta semana`, fr:`Cette semaine`},
+  totalSemana: {pt:`total da semana`, en:`week total`, es:`total de la semana`, fr:`total de la semaine`},
+  totalSemanaRow: {pt:`Total da semana`, en:`Week total`, es:`Total de la semana`, fr:`Total de la semaine`},
+  weekDaysHeading: {pt:`Dias da semana`, en:`Days of the week`, es:`Días de la semana`, fr:`Jours de la semaine`},
+  kindHeading: {pt:`Faturação por tipo de dia`, en:`Billing by day type`, es:`Facturación por tipo de día`, fr:`Facturation par type de jour`},
+  kindNormal: {pt:`Dias normais`, en:`Normal days`, es:`Días normales`, fr:`Jours normaux`},
+  kindSunday: {pt:`Domingos`, en:`Sundays`, es:`Domingos`, fr:`Dimanches`},
+  dayOne: {pt:`dia`, en:`day`, es:`día`, fr:`jour`},
+  dayMany: {pt:`dias`, en:`days`, es:`días`, fr:`jours`},
+  extraDouble: {pt:`do dobro`, en:`from doubling`, es:`del doble`, fr:`du doublement`},
+  specialDaysHeading: {pt:`Domingos trabalhados`, en:`Sundays worked`, es:`Domingos trabajados`, fr:`Dimanches travaillés`},
+  thDay: {pt:`Dia`, en:`Day`, es:`Día`, fr:`Jour`},
+  thType: {pt:`Tipo`, en:`Type`, es:`Tipo`, fr:`Type`},
+  totalSpecial: {pt:`Total dos domingos`, en:`Total Sundays`, es:`Total de los domingos`, fr:`Total des dimanches`},
+  noSpecialDays: {pt:`Sem trabalho ao domingo neste período.`, en:`No work on Sundays in this period.`, es:`Sin trabajo en domingo en este período.`, fr:`Aucun travail le dimanche sur cette période.`}
+});
+Object.assign(TRANSLATIONS_TS, {
+  tabSemanal: `Nkatsakanyo wa vhiki`,
+  weekTitle: `Nkatsakanyo wa vhiki`,
+  weekWord: `Vhiki`,
+  prevWeek: `‹ Leri hundzeke`,
+  nextWeek: `Leri landzelaka ›`,
+  thisWeek: `Vhiki leri`,
+  totalSemana: `nhlayo ya vhiki`,
+  totalSemanaRow: `Nhlayo hinkwayo ya vhiki`,
+  weekDaysHeading: `Masiku ya vhiki`,
+  kindHeading: `Nkoka hi muxaka wa siku`,
+  kindNormal: `Masiku ya ntolovelo`,
+  kindSunday: `Masonto`,
+  dayOne: `siku`,
+  dayMany: `masiku`,
+  extraDouble: `wa ku phindhiwa`,
+  specialDaysHeading: `Masonto lama tirhiweke`,
+  thDay: `Siku`,
+  thType: `Muxaka`,
+  totalSpecial: `Nhlayo ya masonto`,
+  noSpecialDays: `A ku na ntirho hi Sonto eka nkarhi lowu.`
+});
+
+Object.assign(TRANSLATIONS, {
+  tabGastos: {pt:`Gastos`, en:`Expenses`, es:`Gastos`, fr:`Dépenses`},
+  expDayHeading: {pt:`Gastos do dia`, en:`Expenses of the day`, es:`Gastos del día`, fr:`Dépenses du jour`},
+  expDayTotal: {pt:`gastos do dia`, en:`day's expenses`, es:`gastos del día`, fr:`dépenses du jour`},
+  expAddHeading: {pt:`Adicionar gasto`, en:`Add expense`, es:`Añadir gasto`, fr:`Ajouter une dépense`},
+  expAddBtn: {pt:`Adicionar gasto`, en:`Add expense`, es:`Añadir gasto`, fr:`Ajouter la dépense`},
+  catPortagem: {pt:`Portagem`, en:`Toll`, es:`Peaje`, fr:`Péage`},
+  catAlimentacao: {pt:`Alimentação`, en:`Food`, es:`Alimentación`, fr:`Alimentation`},
+  expAmountLabel: {pt:`Valor (€)`, en:`Amount (€)`, es:`Importe (€)`, fr:`Montant (€)`},
+  expNoteLabel: {pt:`Descrição (opcional)`, en:`Description (optional)`, es:`Descripción (opcional)`, fr:`Description (facultatif)`},
+  expNotePlaceholder: {pt:`ex: A1 Lisboa–Porto, almoço...`, en:`e.g. A1 Lisbon–Porto, lunch...`, es:`ej: A1 Lisboa–Oporto, almuerzo...`, fr:`ex : A1 Lisbonne–Porto, déjeuner...`},
+  expReceiptLabel: {pt:`Foto do recibo (opcional)`, en:`Receipt photo (optional)`, es:`Foto del recibo (opcional)`, fr:`Photo du reçu (facultatif)`},
+  expListHeading: {pt:`Gastos registados`, en:`Recorded expenses`, es:`Gastos registrados`, fr:`Dépenses enregistrées`},
+  expNone: {pt:`Ainda não há gastos neste dia.`, en:`No expenses for this day yet.`, es:`Aún no hay gastos este día.`, fr:`Aucune dépense ce jour pour le moment.`},
+  expNoneMonth: {pt:`Sem gastos neste mês.`, en:`No expenses this month.`, es:`Sin gastos este mes.`, fr:`Aucune dépense ce mois-ci.`},
+  expMonthHeading: {pt:`Resumo mensal de gastos`, en:`Monthly expenses summary`, es:`Resumen mensual de gastos`, fr:`Résumé mensuel des dépenses`},
+  expMonthTotal: {pt:`gastos do mês`, en:`month's expenses`, es:`gastos del mes`, fr:`dépenses du mois`},
+  expMonthSummaryHeading: {pt:`Gastos do mês`, en:`Expenses of the month`, es:`Gastos del mes`, fr:`Dépenses du mois`},
+  totalGastosRow: {pt:`Total de gastos`, en:`Total expenses`, es:`Total de gastos`, fr:`Total des dépenses`},
+  thReceipt: {pt:`Recibo`, en:`Receipt`, es:`Recibo`, fr:`Reçu`},
+  viewReceipt: {pt:`Ver recibo`, en:`View receipt`, es:`Ver recibo`, fr:`Voir le reçu`},
+  addReceipt: {pt:`Anexar recibo`, en:`Attach receipt`, es:`Adjuntar recibo`, fr:`Joindre un reçu`},
+  closeBtn: {pt:`Fechar`, en:`Close`, es:`Cerrar`, fr:`Fermer`},
+  confirmDeleteExpense: {pt:`Tens a certeza que queres eliminar este gasto (e o recibo)?`, en:`Are you sure you want to delete this expense (and its receipt)?`, es:`¿Seguro que quieres eliminar este gasto (y el recibo)?`, fr:`Es-tu sûr de vouloir supprimer cette dépense (et son reçu) ?`},
+  toastExpenseAdded: {pt:`Gasto registado com sucesso!`, en:`Expense saved successfully!`, es:`¡Gasto registrado con éxito!`, fr:`Dépense enregistrée avec succès !`},
+  toastReceiptSaved: {pt:`Recibo guardado!`, en:`Receipt saved!`, es:`¡Recibo guardado!`, fr:`Reçu enregistré !`},
+  errAmount: {pt:`Indica um valor válido, maior que zero.`, en:`Enter a valid amount greater than zero.`, es:`Indica un importe válido, mayor que cero.`, fr:`Indique un montant valide, supérieur à zéro.`},
+  errReceiptInvalid: {pt:`Escolhe uma imagem válida para o recibo (até 15 MB).`, en:`Choose a valid image for the receipt (up to 15 MB).`, es:`Elige una imagen válida para el recibo (hasta 15 MB).`, fr:`Choisis une image valide pour le reçu (jusqu’à 15 Mo).`},
+  errReceiptSave: {pt:`O gasto ficou guardado, mas não foi possível guardar a foto do recibo. Tenta anexá-la outra vez.`, en:`The expense was saved, but the receipt photo could not be saved. Try attaching it again.`, es:`El gasto se guardó, pero no se pudo guardar la foto del recibo. Inténtalo de nuevo.`, fr:`La dépense est enregistrée, mais la photo du reçu n’a pas pu l’être. Réessaie de la joindre.`},
+  errReceiptLoad: {pt:`Não foi possível carregar o recibo.`, en:`The receipt could not be loaded.`, es:`No se pudo cargar el recibo.`, fr:`Le reçu n’a pas pu être chargé.`},
+  errNeedSql: {pt:`A base de dados precisa de ser atualizada: corre o SQL novo no Supabase (ficheiro supabase_app_data.sql).`, en:`The database needs updating: run the new SQL in Supabase (file supabase_app_data.sql).`, es:`Hay que actualizar la base de datos: ejecuta el SQL nuevo en Supabase (archivo supabase_app_data.sql).`, fr:`La base de données doit être mise à jour : exécute le nouveau SQL dans Supabase (fichier supabase_app_data.sql).`},
+  pdfHeading: {pt:`Comprovativo em PDF para imprimir`, en:`PDF proof to print`, es:`Comprobante en PDF para imprimir`, fr:`Justificatif PDF à imprimer`},
+  pdfHelp: {pt:`Gera um PDF do mês escolhido acima, com a lista dos gastos da categoria, o total e um espaço para assinatura.`, en:`Creates a PDF for the month chosen above, with the category's expenses, the total and a signature line.`, es:`Genera un PDF del mes elegido arriba, con la lista de gastos de la categoría, el total y un espacio para la firma.`, fr:`Crée un PDF du mois choisi ci-dessus, avec la liste des dépenses de la catégorie, le total et une ligne de signature.`},
+  pdfWithReceipts: {pt:`Incluir as fotos dos recibos`, en:`Include receipt photos`, es:`Incluir las fotos de los recibos`, fr:`Inclure les photos des reçus`},
+  pdfBtn: {pt:`Comprovativo PDF`, en:`PDF proof`, es:`Comprobante PDF`, fr:`Justificatif PDF`},
+  pdfWorking: {pt:`A gerar…`, en:`Creating…`, es:`Generando…`, fr:`Création…`},
+  pdfNone: {pt:`Não há gastos desta categoria neste mês.`, en:`There are no expenses in this category this month.`, es:`No hay gastos de esta categoría este mes.`, fr:`Aucune dépense dans cette catégorie ce mois-ci.`},
+  pdfTitle: {pt:`Comprovativo de despesas`, en:`Expense proof`, es:`Comprobante de gastos`, fr:`Justificatif de dépenses`},
+  pdfName: {pt:`Nome`, en:`Name`, es:`Nombre`, fr:`Nom`},
+  pdfCategory: {pt:`Categoria`, en:`Category`, es:`Categoría`, fr:`Catégorie`},
+  pdfPeriod: {pt:`Período`, en:`Period`, es:`Período`, fr:`Période`},
+  pdfIssued: {pt:`Emitido em`, en:`Issued on`, es:`Emitido el`, fr:`Émis le`},
+  pdfDate: {pt:`Data`, en:`Date`, es:`Fecha`, fr:`Date`},
+  pdfDesc: {pt:`Descrição`, en:`Description`, es:`Descripción`, fr:`Description`},
+  pdfValue: {pt:`Valor`, en:`Amount`, es:`Importe`, fr:`Montant`},
+  pdfTotal: {pt:`Total`, en:`Total`, es:`Total`, fr:`Total`},
+  pdfSignature: {pt:`Assinatura`, en:`Signature`, es:`Firma`, fr:`Signature`},
+  yesWord: {pt:`Sim`, en:`Yes`, es:`Sí`, fr:`Oui`},
+  noWord: {pt:`Não`, en:`No`, es:`No`, fr:`Non`}
+});
+Object.assign(TRANSLATIONS_TS, {
+  tabGastos: `Swihlawulo`,
+  expDayHeading: `Swihlawulo swa siku`,
+  expDayTotal: `swihlawulo swa siku`,
+  expAddHeading: `Engetela xihlawulo`,
+  expAddBtn: `Engetela xihlawulo`,
+  catPortagem: `Toli`,
+  catAlimentacao: `Swakudya`,
+  expAmountLabel: `Nkoka (€)`,
+  expNoteLabel: `Nhlamuselo (a yi lavisisi)`,
+  expNotePlaceholder: `xik: A1 Lisboa–Porto, swakudya swa nhelo...`,
+  expReceiptLabel: `Foto ya rhisiti (a yi lavisisi)`,
+  expListHeading: `Swihlawulo leswi rhijisitariweke`,
+  expNone: `A ku na swihlawulo hi siku leri.`,
+  expNoneMonth: `A ku na swihlawulo hi n'hweti lowu.`,
+  expMonthHeading: `Nkatsakanyo wa swihlawulo wa n'hweti`,
+  expMonthTotal: `swihlawulo swa n'hweti`,
+  expMonthSummaryHeading: `Swihlawulo swa n'hweti`,
+  totalGastosRow: `Nhlayo ya swihlawulo`,
+  thReceipt: `Rhisiti`,
+  viewReceipt: `Vona rhisiti`,
+  addReceipt: `Hoxa rhisiti`,
+  closeBtn: `Vala`,
+  confirmDeleteExpense: `Xana u tiyisile leswaku u lava ku susa xihlawulo lexi (na rhisiti)?`,
+  toastExpenseAdded: `Xihlawulo xi rhijisitariwile hi ku humelela!`,
+  toastReceiptSaved: `Rhisiti yi hlayisiwile!`,
+  errAmount: `Nghenisa nkoka lowu tirhaka, lowu tlulaka zero.`,
+  errReceiptInvalid: `Hlawula foto leyi tirhaka ya rhisiti (ku fika eka 15 MB).`,
+  errReceiptSave: `Xihlawulo xi hlayisiwile, kambe foto ya rhisiti a yi hlayisiwanga. Ringeta ku yi hoxa nakambe.`,
+  errReceiptLoad: `A hi kotanga ku tlhela ku vula rhisiti.`,
+  errNeedSql: `Nkarhi wa data wu fanele ku antswisiwa: tirhisa SQL leyintshwa eka Supabase (fayili supabase_app_data.sql).`,
+  pdfHeading: `Xitiyisiso xa PDF xo kandziyisa`,
+  pdfHelp: `Yi endla PDF ya n'hweti lowu u wu hlawuleke, na swihlawulo swa xiyenge, nhlayo na ndhawu ya xikombiso.`,
+  pdfWithReceipts: `Katsa foto ya marhisiti`,
+  pdfBtn: `PDF ya xitiyisiso`,
+  pdfWorking: `Yi endla…`,
+  pdfNone: `A ku na swihlawulo swa xiyenge lexi hi n'hweti lowu.`,
+  pdfTitle: `Xitiyisiso xa swihlawulo`,
+  pdfName: `Vito`,
+  pdfCategory: `Xiyenge`,
+  pdfPeriod: `Nkarhi`,
+  pdfIssued: `Xi humesiwile hi`,
+  pdfDate: `Siku`,
+  pdfDesc: `Nhlamuselo`,
+  pdfValue: `Nkoka`,
+  pdfTotal: `Nhlayo`,
+  pdfSignature: `Xikombiso`,
+  yesWord: `Ina`,
+  noWord: `Ee-ee`
+});
+
+function displayName(){
+  const p = state.currentProfile || {};
+  const first = (p.firstName||'').trim().split(/\s+/)[0] || '';
+  const lastParts = (p.lastName||'').trim().split(/\s+/).filter(Boolean);
+  const last = lastParts.length ? lastParts[lastParts.length - 1] : '';
+  const full = (first + ' ' + last).trim();
+  return full || state.currentEmail || '';
+}
+function avatarHTML(){
+  const p = state.currentProfile || {};
+  if(isSafePhoto(p.photo)) return `<img src="${p.photo}" alt="">`;
+  const ini = ((p.firstName||'').charAt(0) + (p.lastName||'').charAt(0)).toUpperCase();
+  return esc(ini) || '<svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="10" cy="7" r="3.5"/><path d="M3.5 17c0.8-3.3 3.4-5 6.5-5s5.7 1.7 6.5 5"/></svg>';
+}
+function resizePhoto(file, size){
+  size = size || 192;
+  return new Promise((resolve, reject)=>{
+    const reader = new FileReader();
+    reader.onerror = reject;
+    reader.onload = ()=>{
+      const img = new Image();
+      img.onerror = reject;
+      img.onload = ()=>{
+        const s = Math.min(img.width, img.height);
+        const sx = (img.width - s) / 2, sy = (img.height - s) / 2;
+        const c = document.createElement('canvas');
+        c.width = c.height = size;
+        c.getContext('2d').drawImage(img, sx, sy, s, s, 0, 0, size, size);
+        resolve(c.toDataURL('image/jpeg', 0.85));
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+async function handlePhotoSelected(file){
+  if(!file) return;
+  if(!/^image\//.test(file.type || '') || file.size > 10 * 1024 * 1024){
+    showToast(t('errPhotoInvalid'));
+    return;
+  }
+  try{
+    const dataUrl = await resizePhoto(file);
+    if(!isSafePhoto(dataUrl)){ showToast(t('errPhotoInvalid')); return; }
+    state.currentProfile.photo = dataUrl;
+    await saveProfile();
+    render();
+  }catch(e){ console.error('Erro ao carregar foto', e); }
+}
+
+function t(key){
+  if(state.language === 'ts' && TRANSLATIONS_TS[key]) return TRANSLATIONS_TS[key];
+  const entry = TRANSLATIONS[key];
+  if(!entry) return key;
+  return entry[state.language] || entry.pt || key;
+}
+const LANGUAGES = [
+  {code:'pt', label:'Português'},
+  {code:'en', label:'English'},
+  {code:'es', label:'Español'},
+  {code:'fr', label:'Français'},
+  {code:'ts', label:'Xitsonga'}
+];
+
+const CATS = {
+  instalacao: {labelKey:'catInstalacao', class:'instalacao'},
+  suporte: {labelKey:'catSuporte', class:'suporte'},
+  adicional: {labelKey:'catAdicional', class:'adicional'}
+};
+function catLabel(cat){ return t(CATS[cat].labelKey); }
+
+let state = {
+  theme: 'light',
+  language: 'pt',
+  currentUser: null,
+  authMode: 'login',
+  authError: '',
+  authBusy: false,
+  recoverStep: 'email',
+  recoverMethod: null,
+  recoverUsername: '',
+  recoverCode: null,
+  recoverError: '',
+  recoverBusy: false,
+  services: [],
+  records: [],
+  tab: 'diario',
+  selectedDate: todayISO(),
+  selectedMonth: todayISO().slice(0,7),
+  selectedWeek: weekStartISO(todayISO()),
+  expenses: [],
+  expenseDate: todayISO(),
+  expenseMonth: todayISO().slice(0,7),
+  noExpensesColumn: false,
+  pdfWithReceipts: true,
+  editingRecordId: null,
+  historySearch: '',
+  dayServiceSearch: '',
+  monthServiceSearch: '',
+  settingsPasswordError: '',
+  settingsPasswordSuccess: '',
+  settingsPasswordBusy: false,
+  currentProfile: {firstName:'', lastName:'', email:'', phone:''},
+  settingsAccountError: '',
+  settingsAccountBusy: false,
+  loaded: false,
+  booting: false,
+  authInfo: '',
+  recoverToken: null,
+  currentEmail: '',
+  authDraft: {firstName:'', lastName:'', email:'', phone:''}
+};
+
+function todayISO(){
+  const d = new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+function localeForLang(){
+  return {pt:'pt-PT', en:'en-GB', es:'es-ES', fr:'fr-FR', ts:'ts-ZA'}[state.language] || 'pt-PT';
+}
+function eur(n){ return (n||0).toLocaleString(localeForLang(),{style:'currency',currency:'EUR'}); }
+function fmtDate(iso){
+  const [y,m,d] = iso.split('-');
+  return new Date(y,m-1,d).toLocaleDateString(localeForLang(),{day:'2-digit',month:'short'});
+}
+function fmtDateFull(iso){
+  const [y,m,d] = iso.split('-');
+  return new Date(y,m-1,d).toLocaleDateString(localeForLang(),{weekday:'long',day:'2-digit',month:'long'});
+}
+function sanitizeUsername(u){ return u.trim().toLowerCase().replace(/[^a-z0-9_]/g,''); }
+function titleCase(str){
+  return (str||'').trim().replace(/\s+/g,' ').split(' ').map(w=>{
+    if(!w) return w;
+    if(/^[A-Za-zÀ-ÖØ-öø-ÿ]/.test(w)) return w.charAt(0).toUpperCase() + w.slice(1);
+    return w;
+  }).join(' ');
+}
+
+function applyTheme(){ document.body.setAttribute('data-theme', state.theme); }
+async function loadTheme(){
+  try{
+    const r = await window.storage.get('ftth_theme', false);
+    state.theme = (r && (r.value === 'dark' || r.value === 'light')) ? r.value : 'light';
+  }catch(e){ state.theme = 'light'; }
+  applyTheme();
+}
+async function setTheme(value){
+  state.theme = value;
+  applyTheme();
+  try{ await window.storage.set('ftth_theme', state.theme, false); }
+  catch(e){ console.error('Erro ao guardar tema', e); }
+  render();
+}
+async function toggleTheme(){
+  await setTheme(state.theme === 'dark' ? 'light' : 'dark');
+}
+function themeToggleBtn(){
+  return `<button class="theme-toggle" id="theme-toggle-btn" title="${t('appearanceHeading')}">${state.theme==='dark'?'☀️':'🌙'}</button>`;
+}
+async function loadLanguage(){
+  try{
+    const r = await window.storage.get('ftth_language', false);
+    state.language = (r && LANGUAGES.some(l=>l.code === r.value)) ? r.value : 'pt';
+  }catch(e){ state.language = 'pt'; }
+}
+async function setLanguage(code){
+  state.language = code;
+  try{ await window.storage.set('ftth_language', state.language, false); }
+  catch(e){ console.error('Erro ao guardar idioma', e); }
+  render();
+}
+
+function showConfirm(message){
+  return new Promise(resolve=>{
+    const overlay = document.createElement('div');
+    overlay.className = 'confirm-overlay';
+    overlay.innerHTML = `
+      <div class="confirm-box">
+        <p>${message}</p>
+        <div class="confirm-actions">
+          <button class="btn secondary" id="confirm-cancel">${t('cancelBtn')}</button>
+          <button class="btn" id="confirm-ok" style="background:var(--danger);color:#fff;">${t('confirmDelete')}</button>
+        </div>
+      </div>`;
+    document.body.appendChild(overlay);
+    const cleanup = (result)=>{ overlay.remove(); resolve(result); };
+    overlay.querySelector('#confirm-cancel').onclick = ()=>cleanup(false);
+    overlay.querySelector('#confirm-ok').onclick = ()=>cleanup(true);
+    overlay.onclick = (e)=>{ if(e.target===overlay) cleanup(false); };
+  });
+}
+function showToast(message){
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  requestAnimationFrame(()=> toast.classList.add('show'));
+  setTimeout(()=>{
+    toast.classList.remove('show');
+    setTimeout(()=> toast.remove(), 300);
+  }, 2200);
+}
+
+function defaultServices(){
+  return [
+    {id:'s1', name:'Instalação', category:'instalacao', price:35},
+    {id:'s2', name:'Suporte', category:'suporte', price:20},
+    {id:'s3', name:'Adicional', category:'adicional', price:15}
+  ];
+}
+
+/* ---------- SUPABASE (cliente leve, sem bibliotecas) ---------- */
+const SUPABASE_URL = 'https://uonzyatfdtsgmkkfooue.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_ThyRibDMpqvpCPHMvrMWfQ_XptIadgF';
+const SITE_URL = 'https://jamecossa.github.io/ftth/';
+const SESSION_KEY = 'ftth_session';
+
+let session = null; // {access_token, refresh_token, expires_at, user}
+
+function loadStoredSession(){
+  try{
+    const raw = localStorage.getItem(SESSION_KEY);
+    session = raw ? JSON.parse(raw) : null;
+  }catch(e){ session = null; }
+}
+function storeSession(s){
+  session = s;
+  try{
+    if(s) localStorage.setItem(SESSION_KEY, JSON.stringify(s));
+    else localStorage.removeItem(SESSION_KEY);
+  }catch(e){}
+}
+function sessionFromResponse(d){
+  return {
+    access_token: d.access_token,
+    refresh_token: d.refresh_token,
+    expires_at: d.expires_at || (Math.floor(Date.now()/1000) + (d.expires_in || 3600)),
+    user: d.user
+  };
+}
+function ApiError(message, status, code){
+  this.message = message; this.status = status; this.code = code;
+}
+
+async function sbRequest(path, opts){
+  opts = opts || {};
+  const headers = Object.assign({'apikey': SUPABASE_KEY, 'Content-Type': 'application/json'}, opts.headers || {});
+  if(opts.token) headers['Authorization'] = 'Bearer ' + opts.token;
+  let res;
+  try{
+    res = await fetch(SUPABASE_URL + path, {
+      method: opts.method || 'GET',
+      headers: headers,
+      body: opts.body ? JSON.stringify(opts.body) : undefined
+    });
+  }catch(e){
+    throw new ApiError('network', 0, 'network');
+  }
+  let data = null;
+  const text = await res.text();
+  if(text){ try{ data = JSON.parse(text); }catch(e){ data = text; } }
+  if(!res.ok){
+    const msg = (data && (data.msg || data.message || data.error_description || data.error)) || ('HTTP ' + res.status);
+    const code = (data && (data.error_code || data.code)) || '';
+    throw new ApiError(String(msg), res.status, String(code));
+  }
+  return data;
+}
+
+async function refreshSession(){
+  if(!session || !session.refresh_token) return false;
+  try{
+    const d = await sbRequest('/auth/v1/token?grant_type=refresh_token', {method:'POST', body:{refresh_token: session.refresh_token}});
+    storeSession(sessionFromResponse(d));
+    return true;
+  }catch(e){
+    if(e.status === 400 || e.status === 401 || e.status === 403) storeSession(null);
+    return false;
+  }
+}
+async function getToken(){
+  if(!session) return null;
+  const now = Math.floor(Date.now()/1000);
+  if(session.expires_at - now < 60){
+    await refreshSession();
+    if(!session) return null;
+    if(session.expires_at <= now) return null;
+  }
+  return session.access_token;
+}
+async function dbRequest(path, opts){
+  const token = await getToken();
+  if(!token) throw new ApiError('no session', 401, 'no_session');
+  return sbRequest(path, Object.assign({token: token}, opts || {}));
+}
+async function fetchAppData(){
+  const base = '/rest/v1/app_data?user_id=eq.' + encodeURIComponent(state.currentUser) + '&select=';
+  let rows;
+  try{
+    rows = await dbRequest(base + 'profile,services,records,expenses');
+    state.noExpensesColumn = false;
+  }catch(e){
+    // base de dados ainda sem a coluna dos gastos: a app continua a funcionar sem eles
+    if(e && e.status === 400 && /expenses|42703/i.test(String(e.message || '') + String(e.code || ''))){
+      state.noExpensesColumn = true;
+      rows = await dbRequest(base + 'profile,services,records');
+    }else throw e;
+  }
+  return rows && rows.length ? rows[0] : null;
+}
+async function upsertAppData(fields){
+  const body = Object.assign({user_id: state.currentUser, updated_at: new Date().toISOString()}, fields);
+  return dbRequest('/rest/v1/app_data?on_conflict=user_id', {
+    method: 'POST', body: body,
+    headers: {'Prefer': 'resolution=merge-duplicates,return=minimal'}
+  });
+}
+
+/* ---------- VALIDACAO E LIMPEZA DE DADOS ---------- */
+const ID_RE = /^[A-Za-z0-9_-]{1,40}$/;
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+const PHOTO_RE = /^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/;
+function cleanText(v, max){
+  return String(v == null ? '' : v).replace(/[\u0000-\u001f\u007f]/g, ' ').trim().slice(0, max);
+}
+function cleanNum(v, min, max, dflt){
+  const n = Number(v);
+  if(!isFinite(n)) return dflt;
+  return Math.min(max, Math.max(min, n));
+}
+function parseQty(v){
+  const n = parseFloat(v);
+  if(!isFinite(n) || n <= 0) return 1;
+  return Math.min(Math.round(n * 100) / 100, 100000);
+}
+function parsePrice(v){
+  const n = parseFloat(v);
+  if(!isFinite(n) || n < 0) return 0;
+  return Math.min(Math.round(n * 100) / 100, 1000000);
+}
+function isSafePhoto(p){
+  return typeof p === 'string' && p.length < 200000 && PHOTO_RE.test(p);
+}
+function passwordOk(p){
+  return typeof p === 'string' && p.length >= 8 && p.length <= 72 && /[A-Za-z]/.test(p) && /\d/.test(p);
+}
+function sanitizeProfile(p){
+  p = (p && typeof p === 'object') ? p : {};
+  return {
+    firstName: cleanText(p.firstName, 60),
+    lastName: cleanText(p.lastName, 60),
+    phone: cleanText(p.phone, 30),
+    photo: isSafePhoto(p.photo) ? p.photo : ''
+  };
+}
+function sanitizeServices(arr){
+  if(!Array.isArray(arr)) return [];
+  const out = [], seen = Object.create(null);
+  arr.slice(0, 500).forEach(sv=>{
+    if(!sv || typeof sv !== 'object') return;
+    const id = ID_RE.test(String(sv.id)) ? String(sv.id) : uid();
+    if(seen[id]) return;
+    seen[id] = true;
+    out.push({
+      id: id,
+      name: cleanText(sv.name, 80) || '-',
+      category: Object.prototype.hasOwnProperty.call(CATS, sv.category) ? sv.category : 'adicional',
+      price: Math.round(cleanNum(sv.price, 0, 1000000, 0) * 100) / 100
+    });
+  });
+  return out;
+}
+function sanitizeRecords(arr){
+  if(!Array.isArray(arr)) return [];
+  const out = [], seen = Object.create(null);
+  arr.slice(0, 50000).forEach(r=>{
+    if(!r || typeof r !== 'object') return;
+    if(!DATE_RE.test(String(r.date))) return;
+    const id = ID_RE.test(String(r.id)) ? String(r.id) : uid();
+    if(seen[id]) return;
+    seen[id] = true;
+    const qty = cleanNum(r.qty, 0.01, 100000, 1);
+    const unitPrice = cleanNum(r.unitPrice, 0, 1000000, 0);
+    out.push({
+      id: id,
+      date: String(r.date),
+      serviceId: ID_RE.test(String(r.serviceId)) ? String(r.serviceId) : '',
+      serviceName: cleanText(r.serviceName, 80) || '-',
+      category: Object.prototype.hasOwnProperty.call(CATS, r.category) ? r.category : 'adicional',
+      unitPrice: unitPrice,
+      qty: qty,
+      total: Math.round(qty * unitPrice * 100) / 100,
+      createdAt: cleanNum(r.createdAt, 0, 8.64e15, 0)
+    });
+  });
+  return out;
+}
+
+/* ---------- GASTOS: validacao e acesso aos dados ---------- */
+const EXP_CATS = {
+  portagem: {labelKey: 'catPortagem', cls: 'portagem'},
+  alimentacao: {labelKey: 'catAlimentacao', cls: 'alimentacao'}
+};
+function expCatLabel(c){ return t(EXP_CATS[c].labelKey); }
+const RECEIPT_RE = /^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/;
+function isSafeReceipt(p){
+  return typeof p === 'string' && p.length < 800000 && RECEIPT_RE.test(p);
+}
+function parseAmount(v){
+  const n = parseFloat(String(v).replace(',', '.'));
+  if(!isFinite(n) || n <= 0) return 0;
+  return Math.min(Math.round(n * 100) / 100, 100000);
+}
+function sanitizeExpenses(arr){
+  if(!Array.isArray(arr)) return [];
+  const out = [], seen = Object.create(null);
+  arr.slice(0, 20000).forEach(e=>{
+    if(!e || typeof e !== 'object') return;
+    if(!DATE_RE.test(String(e.date))) return;
+    const id = ID_RE.test(String(e.id)) ? String(e.id) : uid();
+    if(seen[id]) return;
+    seen[id] = true;
+    out.push({
+      id: id,
+      date: String(e.date),
+      category: Object.prototype.hasOwnProperty.call(EXP_CATS, e.category) ? e.category : 'alimentacao',
+      amount: Math.round(cleanNum(e.amount, 0, 100000, 0) * 100) / 100,
+      note: cleanText(e.note, 80),
+      hasReceipt: e.hasReceipt === true,
+      createdAt: cleanNum(e.createdAt, 0, 8.64e15, 0)
+    });
+  });
+  return out;
+}
+
+async function saveExpenses(){
+  if(!state.currentUser) return false;
+  if(state.noExpensesColumn){ showToast(t('errNeedSql')); return false; }
+  try{ await upsertAppData({expenses: state.expenses}); return true; }
+  catch(e){ console.error('Erro ao guardar gastos', e); showToast(mapAuthError(e)); return false; }
+}
+async function saveReceipt(expenseId, dataUrl){
+  await dbRequest('/rest/v1/receipts?on_conflict=user_id,expense_id', {
+    method: 'POST',
+    body: {user_id: state.currentUser, expense_id: expenseId, photo: dataUrl, updated_at: new Date().toISOString()},
+    headers: {'Prefer': 'resolution=merge-duplicates,return=minimal'}
+  });
+}
+async function fetchReceipt(expenseId){
+  const rows = await dbRequest('/rest/v1/receipts?user_id=eq.' + encodeURIComponent(state.currentUser) + '&expense_id=eq.' + encodeURIComponent(expenseId) + '&select=photo');
+  const p = rows && rows[0] && rows[0].photo;
+  return isSafeReceipt(p) ? p : null;
+}
+async function fetchReceipts(ids){
+  const out = {};
+  const clean = ids.filter(id=> ID_RE.test(String(id)));
+  for(let i = 0; i < clean.length; i += 6){
+    const chunk = clean.slice(i, i + 6);
+    const rows = await dbRequest('/rest/v1/receipts?user_id=eq.' + encodeURIComponent(state.currentUser) + '&expense_id=in.(' + chunk.map(encodeURIComponent).join(',') + ')&select=expense_id,photo');
+    (rows || []).forEach(r=>{ if(r && isSafeReceipt(r.photo) && ID_RE.test(String(r.expense_id))) out[r.expense_id] = r.photo; });
+  }
+  return out;
+}
+async function deleteReceipt(expenseId){
+  await dbRequest('/rest/v1/receipts?user_id=eq.' + encodeURIComponent(state.currentUser) + '&expense_id=eq.' + encodeURIComponent(expenseId), {method: 'DELETE'});
+}
+
+function profileForDb(){
+  const p = state.currentProfile || {};
+  return {firstName: p.firstName || '', lastName: p.lastName || '', phone: p.phone || '', photo: p.photo || ''};
+}
+
+/* ---------- DADOS DA CONTA ---------- */
+function migrateLegacyNames(services, records){
+  const map = {
+    s1: ['Instalação FTTH Residencial', 'Instalação'],
+    s2: ['Suporte Técnico', 'Suporte'],
+    s3: ['Adicional – Ponto Extra', 'Adicional']
+  };
+  let changed = false;
+  services.forEach(sv=>{ const m = map[sv.id]; if(m && sv.name === m[0]){ sv.name = m[1]; changed = true; } });
+  records.forEach(r=>{ const m = map[r.serviceId]; if(m && r.serviceName === m[0]){ r.serviceName = m[1]; changed = true; } });
+  return changed;
+}
+async function loadUserData(){
+  const meta = (session && session.user && session.user.user_metadata) || {};
+  const fromMeta = sanitizeProfile({firstName: meta.first_name, lastName: meta.last_name, phone: meta.phone});
+  const row = await fetchAppData(); // se falhar, a excecao sobe e nada e sobrescrito
+  if(row){
+    const rp = sanitizeProfile(row.profile);
+    state.services = sanitizeServices(row.services);
+    state.records = sanitizeRecords(row.records);
+    state.expenses = sanitizeExpenses(row.expenses);
+    state.currentProfile = {
+      firstName: rp.firstName || fromMeta.firstName,
+      lastName: rp.lastName || fromMeta.lastName,
+      phone: rp.phone || fromMeta.phone,
+      photo: rp.photo,
+      email: state.currentEmail
+    };
+    if(migrateLegacyNames(state.services, state.records)){
+      try{ await upsertAppData({services: state.services, records: state.records}); }catch(e){}
+    }
+  }else{
+    state.services = defaultServices();
+    state.records = [];
+    state.expenses = [];
+    state.currentProfile = Object.assign({}, fromMeta, {email: state.currentEmail});
+    await upsertAppData({profile: profileForDb(), services: state.services, records: []});
+  }
+}
+async function saveServices(){
+  if(!state.currentUser) return;
+  try{ await upsertAppData({services: state.services}); }
+  catch(e){ console.error('Erro ao guardar servicos', e); showToast(mapAuthError(e)); }
+}
+async function saveRecords(){
+  if(!state.currentUser) return;
+  try{ await upsertAppData({records: state.records}); }
+  catch(e){ console.error('Erro ao guardar registos', e); showToast(mapAuthError(e)); }
+}
+async function saveProfile(){
+  if(!state.currentUser) return;
+  try{ await upsertAppData({profile: profileForDb()}); }
+  catch(e){ console.error('Erro ao guardar perfil', e); showToast(mapAuthError(e)); }
+}
+
+/* ---------- AUTENTICACAO ---------- */
+function mapAuthError(e){
+  const m = ((e && e.message) || '').toLowerCase();
+  const c = ((e && e.code) || '').toLowerCase();
+  if(c === 'network' || m === 'network') return t('errNetwork');
+  if(c === 'invalid_credentials' || m.indexOf('invalid login') !== -1) return t('errWrongCredentials');
+  if(c === 'email_not_confirmed' || m.indexOf('not confirmed') !== -1) return t('errEmailNotConfirmed');
+  if(c === 'user_already_exists' || m.indexOf('already registered') !== -1) return t('errEmailTaken');
+  if(c === 'weak_password') return t('errPasswordLength');
+  if((e && e.status === 429) || c.indexOf('rate_limit') !== -1) return t('errRateLimit');
+  return t('errGeneric') + ' (' + String((e && e.message) || '?').slice(0, 200) + ')';
+}
+function esc(s){
+  return String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function escAttr(s){ return esc(s); }
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+async function startSession(){
+  const u = (session && session.user) || {};
+  state.currentUser = u.id;
+  state.currentEmail = u.email || '';
+  try{
+    await loadUserData();
+  }catch(e){
+    storeSession(null);
+    state.currentUser = null;
+    state.currentEmail = '';
+    state.authBusy = false;
+    state.authError = mapAuthError(e);
+    render();
+    return false;
+  }
+  state.authBusy = false;
+  state.authError = '';
+  state.authInfo = '';
+  state.loaded = true;
+  render();
+  return true;
+}
+
+async function handleRegister(password, confirm, firstName, lastName, email, phone){
+  state.authError = ''; state.authInfo = '';
+  email = (email || '').trim().toLowerCase();
+  state.authDraft = {firstName: firstName, lastName: lastName, email: email, phone: phone};
+  if(!firstName.trim() || !lastName.trim() || !email || !phone.trim() || !password){
+    state.authError = t('errRequiredFields'); render(); return;
+  }
+  if(!EMAIL_RE.test(email)){ state.authError = t('errEmailInvalid'); render(); return; }
+  if(phone.replace(/\D/g,'').length < 6){ state.authError = t('errPhoneInvalid'); render(); return; }
+  if(!passwordOk(password)){ state.authError = t('errPasswordLength'); render(); return; }
+  if(password !== confirm){ state.authError = t('errPasswordMismatch'); render(); return; }
+
+  state.authBusy = true; render();
+  try{
+    const d = await sbRequest('/auth/v1/signup?redirect_to=' + encodeURIComponent(SITE_URL), {
+      method: 'POST',
+      body: {email: email, password: password, data: {first_name: firstName.trim(), last_name: lastName.trim(), phone: phone.trim()}}
+    });
+    if(d && d.access_token){
+      storeSession(sessionFromResponse(d));
+      await startSession();
+    }else{
+      state.authBusy = false;
+      state.authMode = 'login';
+      state.authInfo = t('confirmEmailMsg');
+      render();
+    }
+  }catch(e){
+    state.authBusy = false;
+    state.authError = mapAuthError(e);
+    render();
+  }
+}
+
+async function handleLogin(email, password){
+  state.authError = ''; state.authInfo = '';
+  email = (email || '').trim().toLowerCase();
+  state.authDraft = Object.assign({}, state.authDraft, {email: email});
+  if(!email || !password){ state.authError = t('errRequiredFields'); render(); return; }
+  state.authBusy = true; render();
+  try{
+    const d = await sbRequest('/auth/v1/token?grant_type=password', {method:'POST', body:{email: email, password: password}});
+    storeSession(sessionFromResponse(d));
+    await startSession();
+  }catch(e){
+    state.authBusy = false;
+    state.authError = mapAuthError(e);
+    render();
+  }
+}
+
+function resetRecoverState(){
+  state.recoverStep = 'email';
+  state.recoverError = '';
+  state.recoverBusy = false;
+  state.recoverToken = null;
+}
+
+async function handleRecoverSend(email){
+  state.recoverError = '';
+  email = (email || '').trim().toLowerCase();
+  state.authDraft = Object.assign({}, state.authDraft, {email: email});
+  if(!EMAIL_RE.test(email)){ state.recoverError = t('errEmailInvalid'); render(); return; }
+  state.recoverBusy = true; render();
+  try{
+    await sbRequest('/auth/v1/recover?redirect_to=' + encodeURIComponent(SITE_URL), {method:'POST', body:{email: email}});
+    state.recoverBusy = false;
+    state.recoverStep = 'sent';
+    render();
+  }catch(e){
+    state.recoverBusy = false;
+    state.recoverError = mapAuthError(e);
+    render();
+  }
+}
+
+async function handleRecoverReset(newPass, newPass2){
+  state.recoverError = '';
+  if(!passwordOk(newPass)){ state.recoverError = t('errPasswordLength'); render(); return; }
+  if(newPass !== newPass2){ state.recoverError = t('errPasswordMismatch'); render(); return; }
+  state.recoverBusy = true; render();
+  try{
+    await sbRequest('/auth/v1/user', {method:'PUT', token: state.recoverToken, body:{password: newPass}});
+    state.authMode = 'login';
+    state.authError = '';
+    state.authInfo = '';
+    resetRecoverState();
+    render();
+    showToast(t('toastPasswordReset'));
+  }catch(e){
+    state.recoverBusy = false;
+    state.recoverError = (e && e.status === 401) ? t('errLinkExpired') : mapAuthError(e);
+    render();
+  }
+}
+
+async function handleLogout(){
+  const token = session && session.access_token;
+  storeSession(null);
+  state.currentUser = null;
+  state.currentEmail = '';
+  state.loaded = false;
+  state.services = [];
+  state.records = [];
+  state.expenses = [];
+  state.currentProfile = {firstName:'', lastName:'', email:'', phone:'', photo:''};
+  state.authMode = 'login';
+  state.authError = '';
+  state.authInfo = '';
+  state.authBusy = false;
+  state.tab = 'diario';
+  render();
+  if(token){
+    try{ await sbRequest('/auth/v1/logout?scope=local', {method:'POST', token: token}); }catch(e){}
+  }
+}
+
+function render(){
+  const root = document.getElementById('root');
+  document.body.classList.remove('menu-open');
+  if(state.booting){ root.innerHTML = '<div class="loading">…</div>'; return; }
+  if(!state.currentUser){
+    root.innerHTML = renderAuth();
+    attachAuthHandlers();
+    return;
+  }
+  root.innerHTML = `
+    <header class="top">
+        <div class="brand">
+          <button class="menu-btn" id="menu-btn" aria-label="Menu">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="5" x2="17" y2="5"/><line x1="3" y1="10" x2="17" y2="10"/><line x1="3" y1="15" x2="17" y2="15"/></svg>
+          </button>
+          <div>
+            <h1>Registo FTTH</h1>
+            <div class="sub">${t('tagline')}</div>
+          </div>
+        </div>
+        <div class="user-box">
+          <span class="who">${esc(displayName())}</span>
+          <button class="avatar-btn${isSafePhoto(state.currentProfile.photo) ? ' has-photo' : ''}" id="avatar-btn" title="${t('changePhotoTitle')}" aria-label="${t('changePhotoTitle')}">${avatarHTML()}</button>
+          <input type="file" id="photo-input" accept="image/*" style="display:none;">
+        </div>
+      </header>
+      <div class="app-shell">
+      <aside class="sidebar" id="sidebar">
+        <nav class="tabs" id="tabs"></nav>
+      </aside>
+      <div class="side-backdrop" id="side-backdrop"></div>
+      <div class="wrap">
+      <main class="sheet" id="app">${state.loaded ? '' : '<div class="loading">…</div>'}</main>
+    </div>
+    </div>
+  `;
+  renderTabs();
+  renderApp();
+  const menuBtn = document.getElementById('menu-btn');
+  if(menuBtn) menuBtn.onclick = async ()=>{
+    if(window.matchMedia('(max-width:640px)').matches){
+      document.body.classList.toggle('menu-open');
+    }else{
+      const collapsed = document.body.classList.toggle('sidebar-collapsed');
+      try{ await window.storage.set('ftth_sidebar_collapsed', collapsed ? '1' : '0', false); }catch(e){}
+    }
+  };
+  const avatarBtn = document.getElementById('avatar-btn');
+  const photoInput = document.getElementById('photo-input');
+  if(avatarBtn && photoInput){
+    avatarBtn.onclick = ()=> photoInput.click();
+    photoInput.onchange = (e)=>{ handlePhotoSelected(e.target.files[0]); };
+  }
+  const backdrop = document.getElementById('side-backdrop');
+  if(backdrop) backdrop.onclick = ()=> document.body.classList.remove('menu-open');
+}
+
+function renderAuth(){
+  if(state.authMode === 'recover') return renderRecoverAuth();
+  const isLogin = state.authMode === 'login';
+  const d = state.authDraft || {};
+  return `
+    <div class="auth-wrap">
+      <div class="auth-top-bar">${themeToggleBtn()}</div>
+      <div class="auth-card">
+        <h1>Registo FTTH</h1>
+        <div class="tagline">${isLogin ? t('loginTagline') : t('registerTagline')}</div>
+        ${state.authInfo ? `<div class="auth-info">${esc(state.authInfo)}</div>` : ''}
+        ${state.authError ? `<div class="auth-error">${esc(state.authError)}</div>` : ''}
+        ${!isLogin ? `
+        <div class="row-flex">
+          <div style="flex:1;min-width:140px;">
+            <label for="auth-firstname">${t('firstNameLabel')}</label>
+            <input type="text" id="auth-firstname" autocomplete="given-name" value="${escAttr(d.firstName)}" style="width:100%;">
+          </div>
+          <div style="flex:1;min-width:140px;">
+            <label for="auth-lastname">${t('lastNameLabel')}</label>
+            <input type="text" id="auth-lastname" autocomplete="family-name" value="${escAttr(d.lastName)}" style="width:100%;">
+          </div>
+        </div>` : ''}
+        <div class="auth-field">
+          <label for="auth-email">${t('emailLabel')}</label>
+          <input type="email" id="auth-email" autocomplete="${isLogin?'username':'email'}" value="${escAttr(d.email)}">
+        </div>
+        ${!isLogin ? `
+        <div class="auth-field">
+          <label for="auth-phone">${t('phoneLabel')}</label>
+          <input type="tel" id="auth-phone" autocomplete="tel" value="${escAttr(d.phone)}">
+        </div>` : ''}
+        <div class="auth-field">
+          <label for="auth-pass">${t('passwordLabel')}</label>
+          <input type="password" id="auth-pass" autocomplete="${isLogin?'current-password':'new-password'}">
+        </div>
+        ${!isLogin ? `
+        <div class="auth-field">
+          <label for="auth-pass2">${t('confirmPasswordLabel')}</label>
+          <input type="password" id="auth-pass2" autocomplete="new-password">
+        </div>` : ''}
+        <label class="show-pass-row">
+          <input type="checkbox" id="show-pass-toggle"> ${t('showPasswordLabel')}
+        </label>
+        <button class="btn wide" id="auth-submit" ${state.authBusy?'disabled':''}>
+          ${state.authBusy ? t('busyBtn') : (isLogin ? t('loginBtn') : t('registerBtn'))}
+        </button>
+        ${isLogin ? `<div class="auth-switch"><button id="forgot-pass-link">${t('forgotPasswordLink')}</button></div>` : ''}
+        <div class="auth-switch">
+          ${isLogin
+            ? `${t('noAccountQ')} <button id="auth-toggle">${t('registerBtn')}</button>`
+            : `${t('hasAccountQ')} <button id="auth-toggle">${t('loginBtn')}</button>`}
+        </div>
+        <div class="auth-note">${t('authNote')}</div>
+      </div>
+    </div>
+  `;
+}
+
+function renderRecoverAuth(){
+  const step = state.recoverStep;
+  const d = state.authDraft || {};
+  let body = '';
+
+  if(step === 'email'){
+    body = `
+      <div class="tagline">${t('recoverEmailTagline')}</div>
+      ${state.recoverError ? `<div class="auth-error">${esc(state.recoverError)}</div>` : ''}
+      <div class="auth-field">
+        <label for="recover-email">${t('emailLabel')}</label>
+        <input type="email" id="recover-email" autocomplete="email" value="${escAttr(d.email)}">
+      </div>
+      <button class="btn wide" id="recover-send-btn" ${state.recoverBusy?'disabled':''}>
+        ${state.recoverBusy ? t('busyBtn') : t('recoverSendBtn')}
+      </button>
+    `;
+  } else if(step === 'sent'){
+    body = `
+      <div class="auth-info">${t('recoverSentMsg')}</div>
+    `;
+  } else {
+    body = `
+      <div class="tagline">${t('recoverResetTagline')}</div>
+      ${state.recoverError ? `<div class="auth-error">${esc(state.recoverError)}</div>` : ''}
+      <div class="auth-field">
+        <label for="recover-newpass">${t('newPasswordLabel')}</label>
+        <input type="password" id="recover-newpass" autocomplete="new-password">
+      </div>
+      <div class="auth-field">
+        <label for="recover-newpass2">${t('confirmNewPasswordLabel')}</label>
+        <input type="password" id="recover-newpass2" autocomplete="new-password">
+      </div>
+      <label class="show-pass-row">
+        <input type="checkbox" id="recover-show-pass"> ${t('showPasswordLabel')}
+      </label>
+      <button class="btn wide" id="recover-reset-btn" ${state.recoverBusy?'disabled':''}>
+        ${state.recoverBusy ? t('busyBtn') : t('resetPasswordBtn')}
+      </button>
+    `;
+  }
+
+  return `
+    <div class="auth-wrap">
+      <div class="auth-top-bar">${themeToggleBtn()}</div>
+      <div class="auth-card">
+        <h1>Registo FTTH</h1>
+        ${body}
+        <div class="auth-switch">
+          <button id="recover-back">${t('backToLoginLink')}</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function attachAuthHandlers(){
+  document.getElementById('theme-toggle-btn').onclick = toggleTheme;
+
+  if(state.authMode === 'recover'){
+    const backBtn = document.getElementById('recover-back');
+    if(backBtn) backBtn.onclick = ()=>{
+      state.authMode = 'login';
+      resetRecoverState();
+      render();
+    };
+
+    if(state.recoverStep === 'email'){
+      const sendBtn = document.getElementById('recover-send-btn');
+      const emailEl = document.getElementById('recover-email');
+      if(sendBtn && emailEl){
+        sendBtn.onclick = ()=> handleRecoverSend(emailEl.value);
+        emailEl.addEventListener('keydown', e=>{ if(e.key==='Enter') sendBtn.click(); });
+      }
+    }
+
+    if(state.recoverStep === 'reset'){
+      const showRecPass = document.getElementById('recover-show-pass');
+      if(showRecPass) showRecPass.onchange = (e)=>{
+        const type = e.target.checked ? 'text' : 'password';
+        ['recover-newpass','recover-newpass2'].forEach(id=>{
+          const el = document.getElementById(id);
+          if(el) el.type = type;
+        });
+      };
+      const resetBtn = document.getElementById('recover-reset-btn');
+      if(resetBtn) resetBtn.onclick = ()=>{
+        const np = document.getElementById('recover-newpass').value;
+        const np2 = document.getElementById('recover-newpass2').value;
+        handleRecoverReset(np, np2);
+      };
+    }
+    return;
+  }
+
+  const showPassToggle = document.getElementById('show-pass-toggle');
+  if(showPassToggle) showPassToggle.onchange = (e)=>{
+    const type = e.target.checked ? 'text' : 'password';
+    const p1 = document.getElementById('auth-pass');
+    const p2 = document.getElementById('auth-pass2');
+    if(p1) p1.type = type;
+    if(p2) p2.type = type;
+  };
+  document.getElementById('auth-toggle').onclick = ()=>{
+    state.authMode = state.authMode === 'login' ? 'register' : 'login';
+    state.authError = '';
+    state.authInfo = '';
+    render();
+  };
+  const forgotLink = document.getElementById('forgot-pass-link');
+  if(forgotLink) forgotLink.onclick = ()=>{
+    const emailEl = document.getElementById('auth-email');
+    if(emailEl) state.authDraft = Object.assign({}, state.authDraft, {email: emailEl.value});
+    state.authMode = 'recover';
+    resetRecoverState();
+    state.authError = '';
+    state.authInfo = '';
+    render();
+  };
+  document.getElementById('auth-submit').onclick = ()=>{
+    const email = document.getElementById('auth-email').value;
+    const pass = document.getElementById('auth-pass').value;
+    if(state.authMode === 'login'){
+      handleLogin(email, pass);
+    }else{
+      const pass2 = document.getElementById('auth-pass2').value;
+      const firstName = document.getElementById('auth-firstname').value;
+      const lastName = document.getElementById('auth-lastname').value;
+      const phone = document.getElementById('auth-phone').value;
+      handleRegister(pass, pass2, firstName, lastName, email, phone);
+    }
+  };
+  document.getElementById('auth-pass').addEventListener('keydown', e=>{
+    if(e.key==='Enter') document.getElementById('auth-submit').click();
+  });
+}
+
+const TAB_ICONS = {
+  diario: '<rect x="3" y="4" width="14" height="13" rx="2"/><line x1="3" y1="8" x2="17" y2="8"/><line x1="7" y1="2" x2="7" y2="5"/><line x1="13" y1="2" x2="13" y2="5"/>',
+  servicos: '<line x1="7" y1="5" x2="17" y2="5"/><line x1="7" y1="10" x2="17" y2="10"/><line x1="7" y1="15" x2="17" y2="15"/><circle cx="3.5" cy="5" r="0.9"/><circle cx="3.5" cy="10" r="0.9"/><circle cx="3.5" cy="15" r="0.9"/>',
+  gastos: '<path d="M5 3h10v14l-2-1.5L11 17l-2-1.5L7 17l-2-1.5z"/><line x1="8" y1="7" x2="12" y2="7"/><line x1="8" y1="10" x2="12" y2="10"/>',
+  semanal: '<rect x="3" y="4" width="14" height="13" rx="2"/><line x1="3" y1="8" x2="17" y2="8"/><line x1="6" y1="12" x2="14" y2="12"/><line x1="7" y1="2" x2="7" y2="5"/><line x1="13" y1="2" x2="13" y2="5"/>',
+  mensal: '<line x1="4" y1="17" x2="4" y2="9"/><line x1="10" y1="17" x2="10" y2="4"/><line x1="16" y1="17" x2="16" y2="12"/>',
+  definicoes: '<line x1="3" y1="6" x2="17" y2="6"/><line x1="3" y1="14" x2="17" y2="14"/><circle cx="7" cy="6" r="2" fill="var(--card-bg)"/><circle cx="13" cy="14" r="2" fill="var(--card-bg)"/>'
+};
+function renderTabs(){
+  const tabs = [
+    {id:'diario', label:t('tabDiario')},
+    {id:'gastos', label:t('tabGastos')},
+    {id:'servicos', label:t('tabServicos')},
+    {id:'semanal', label:t('tabSemanal')},
+    {id:'mensal', label:t('tabMensal')},
+    {id:'definicoes', label:t('tabDefinicoes')}
+  ];
+  document.getElementById('tabs').innerHTML = tabs.map(tb=>
+    `<button class="${state.tab===tb.id?'active':''}" data-tab="${tb.id}" title="${tb.label}" aria-label="${tb.label}"><span class="tab-ico"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${TAB_ICONS[tb.id]}</svg></span><span class="tab-label">${tb.label}</span></button>`
+  ).join('') + `<button class="logout-btn" id="logout-btn" title="${t('logout')}" aria-label="${t('logout')}"><span class="tab-ico"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h4"/><polyline points="13 6 17 10 13 14"/><line x1="17" y1="10" x2="7" y2="10"/></svg></span><span class="tab-label">${t('logout')}</span></button>`;
+  const logoutBtn = document.getElementById('logout-btn');
+  document.querySelectorAll('nav.tabs button[data-tab]').forEach(b=>{
+    b.onclick = ()=>{ state.tab = b.dataset.tab; document.body.classList.remove('menu-open'); renderTabs(); renderApp(); };
+  });
+  if(logoutBtn) logoutBtn.onclick = handleLogout;
+}
+
+function renderApp(){
+  const app = document.getElementById('app');
+  if(!state.loaded){ app.innerHTML = '<div class="loading">…</div>'; return; }
+  if(state.tab==='diario') app.innerHTML = renderDiario();
+  else if(state.tab==='servicos') app.innerHTML = renderServicos();
+  else if(state.tab==='gastos') app.innerHTML = renderGastos();
+  else if(state.tab==='semanal') app.innerHTML = renderSemanal();
+  else if(state.tab==='mensal') app.innerHTML = renderMensal();
+  else app.innerHTML = renderDefinicoes();
+  attachHandlers();
+}
+
+const DOUBLE_MULT = 2; // domingos
+function isSundayISO(iso){
+  const p = String(iso || '').split('-').map(Number);
+  return new Date(p[0], p[1] - 1, p[2]).getDay() === 0;
+}
+function dayMult(iso){ return isSundayISO(iso) ? DOUBLE_MULT : 1; }
+function unitRate(r){ return Math.round(r.unitPrice * dayMult(r.date) * 100) / 100; }
+function priceOn(price, iso){ return Math.round(price * dayMult(iso) * 100) / 100; }
+function optLabel(sv, iso){
+  return esc(sv.name) + ' — ' + eur(priceOn(sv.price, iso)) + (dayMult(iso) > 1 ? ' (×' + DOUBLE_MULT + ')' : '');
+}
+function recTotal(r){ return Math.round(r.qty * r.unitPrice * dayMult(r.date) * 100) / 100; }
+function sundayBlock(date){
+  return isSundayISO(date) ? `<div class="double-note">${esc(t('sundayNote'))}</div>` : '';
+}
+function dayBadge(iso){
+  return isSundayISO(iso) ? ` <span class="badge adicional">${esc(t('badgeSunday'))}</span>` : '';
+}
+function recordsForDate(date){
+  return state.records.filter(r=>r.date===date);
+}
+function dayTotal(date){
+  return recordsForDate(date).reduce((s,r)=>s+recTotal(r),0);
+}
+function aggregateByService(records){
+  const map = Object.create(null);
+  records.forEach(r=>{
+    if(!map[r.serviceId]) map[r.serviceId] = {name:r.serviceName, category:r.category, qty:0, total:0};
+    map[r.serviceId].qty += r.qty;
+    map[r.serviceId].total += recTotal(r);
+  });
+  return Object.values(map).sort((a,b)=>b.total-a.total);
+}
+
+function renderDiario(){
+  const date = state.selectedDate;
+  const recs = recordsForDate(date).sort((a,b)=>a.createdAt-b.createdAt);
+  const total = dayTotal(date);
+  const perService = aggregateByService(recs);
+
+  const svcOptions = state.services.map(s=>
+    `<option value="${esc(s.id)}">${optLabel(s, date)}</option>`
+  ).join('');
+
+  const rows = recs.length ? recs.map(r=>{
+    if(r.id === state.editingRecordId){
+      const opts = state.services.map(s=>
+        `<option value="${esc(s.id)}" ${s.id===r.serviceId?'selected':''}>${optLabel(s, date)}</option>`
+      ).join('');
+      return `
+        <tr>
+          <td colspan="5">
+            <div class="row-flex">
+              <div class="field-pair">
+                <div>
+                  <label for="edit-rec-svc">${t('serviceLabel')}</label>
+                  <select id="edit-rec-svc">${opts}</select>
+                </div>
+                <div>
+                  <label for="edit-rec-qty">${t('quantityLabel')}</label>
+                  <input type="number" id="edit-rec-qty" value="${r.qty}" min="1" step="1">
+                </div>
+              </div>
+              <button class="btn" id="edit-rec-save" data-recid="${esc(r.id)}">${t('saveBtn')}</button>
+              <button class="btn secondary" id="edit-rec-cancel">${t('cancelBtn')}</button>
+            </div>
+          </td>
+        </tr>`;
+    }
+    return `
+    <tr>
+      <td>${esc(r.serviceName)} <span class="badge ${CATS[r.category].class}">${catLabel(r.category)}</span></td>
+      <td class="num">${r.qty}</td>
+      <td class="num">${eur(unitRate(r))}</td>
+      <td class="num">${eur(recTotal(r))}</td>
+      <td class="num">
+        <button class="icon-edit" data-edit="${esc(r.id)}" title="${t('editTitle')}">✎</button>
+        <button class="icon-del" data-del="${esc(r.id)}" title="${t('removeTitle')}">✕</button>
+      </td>
+    </tr>`;
+  }).join('') :
+    `<tr><td colspan="5" class="empty">${t('noEntriesMsg')}</td></tr>`;
+
+  const search1 = state.dayServiceSearch.trim().toLowerCase();
+  const filteredPerService = search1
+    ? perService.filter(s => s.name.toLowerCase().includes(search1) || catLabel(s.category).toLowerCase().includes(search1))
+    : perService;
+  const summaryRows = perService.length
+    ? (filteredPerService.length
+        ? filteredPerService.map(s=>`
+    <tr>
+      <td>${esc(s.name)} <span class="badge ${CATS[s.category].class}">${catLabel(s.category)}</span></td>
+      <td class="num">${s.qty}</td>
+      <td class="num">${eur(s.total)}</td>
+    </tr>`).join('')
+        : `<tr><td colspan="3" class="empty">${t('noSearchResultsMsg')}</td></tr>`)
+      + `
+    <tr class="total-row"><td>${t('totalDoDiaRow')}</td><td class="num">${perService.reduce((a,s)=>a+s.qty,0)}</td><td class="num">${eur(total)}</td></tr>`
+    : `<tr><td colspan="3" class="empty">${t('noDataSummaryMsg')}</td></tr>`;
+
+  const allPastDates = [...new Set(state.records.map(r=>r.date))]
+    .sort((a,b)=>b.localeCompare(a))
+    .filter(d=>d!==date);
+  const search = state.historySearch.trim().toLowerCase();
+  const historyToShow = search
+    ? allPastDates.filter(d =>
+        fmtDate(d).toLowerCase().includes(search) ||
+        fmtDateFull(d).toLowerCase().includes(search) ||
+        d.includes(search))
+    : allPastDates.slice(0,10);
+
+  return `
+    <div class="top-flex">
+      <div>
+        <h2 class="section-title" style="margin-bottom:8px;">${fmtDateFull(date)}</h2>
+        <label for="date-picker">${t('dateLabel')}</label>
+        <input type="date" id="date-picker" value="${esc(date)}">
+        ${sundayBlock(date)}
+      </div>
+      <div class="stamp">
+        <div class="label">${t('totalDoDia')}</div>
+        <div class="val">${eur(total)}</div>
+      </div>
+    </div>
+
+    <h2 class="section-title">${t('addServiceHeading')}</h2>
+    ${state.services.length===0 ? `<p class="empty">${t('noServicesMsg')}</p>` : `
+    <div class="row-flex">
+      <div class="field-pair">
+        <div>
+          <label for="svc-select">${t('serviceLabel')}</label>
+          <select id="svc-select">${svcOptions}</select>
+        </div>
+        <div>
+          <label for="svc-qty">${t('quantityLabel')}</label>
+          <input type="number" id="svc-qty" value="1" min="1" step="1">
+        </div>
+      </div>
+      <button class="btn" id="add-entry-btn">${t('addBtn')}</button>
+    </div>`}
+
+    <hr class="divider">
+    <h2 class="section-title">${t('registeredServicesHeading')}</h2>
+    <div class="table-scroll"><table>
+      <thead><tr><th>${t('serviceLabel')}</th><th class="num">${t('thQty')}</th><th class="num">${t('thPrice')}</th><th class="num">${t('thSubtotal')}</th><th></th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div>
+
+    <hr class="divider">
+    <h2 class="section-title">${t('dailySumHeading')}</h2>
+    <div class="search-icon-wrap" style="margin-bottom:10px;">
+      <span class="icon">🔍</span>
+      <input type="text" id="day-svc-search" placeholder="${t('searchServiceTypePlaceholder')}" value="${esc(state.dayServiceSearch)}">
+    </div>
+    <div class="table-scroll"><table>
+      <thead><tr><th>${t('serviceLabel')}</th><th class="num">${t('thQtyTotal')}</th><th class="num">${t('thValueTotal')}</th></tr></thead>
+      <tbody>${summaryRows}</tbody>
+    </table></div>
+
+    ${allPastDates.length ? `
+    <hr class="divider">
+    <h2 class="section-title">${t('previousDaysHeading')}</h2>
+    <div style="margin-bottom:10px;">
+      <label for="hist-search">${t('searchDayLabel')}</label>
+      <input type="text" id="hist-search" placeholder="${t('searchDayPlaceholder')}" value="${esc(state.historySearch)}" style="width:100%;max-width:280px;">
+    </div>
+    <div class="hist-list">
+      ${historyToShow.length
+        ? historyToShow.map(d=>`<div class="hist-row" data-goto="${d}"><span class="d">${fmtDateFull(d)}${dayBadge(d)}</span><span class="v">${eur(dayTotal(d))}</span></div>`).join('')
+        : `<p class="empty">${t('noDayFoundMsg')}</p>`}
+    </div>` : ''}
+  `;
+}
+
+function renderServicos(){
+  const rows = state.services.map(s=>`
+    <tr data-svc="${esc(s.id)}">
+      <td><input type="text" class="edit-name" value="${esc(s.name)}" style="width:100%;min-width:160px;"></td>
+      <td>
+        <select class="edit-cat">
+          ${Object.keys(CATS).map(c=>`<option value="${c}" ${c===s.category?'selected':''}>${catLabel(c)}</option>`).join('')}
+        </select>
+      </td>
+      <td class="num"><input type="number" class="edit-price" value="${s.price}" min="0" step="0.01" style="width:90px;"></td>
+      <td class="num">
+        <button class="btn secondary" data-save="${esc(s.id)}" style="padding:5px 10px;font-size:0.78rem;">${t('saveBtn')}</button>
+        <button class="icon-del" data-delsvc="${esc(s.id)}" title="${t('removeTitle')}">✕</button>
+      </td>
+    </tr>`).join('');
+
+  return `
+    <h2 class="section-title">${t('tabServicos')}</h2>
+    <p class="footnote" style="margin-top:-8px;margin-bottom:16px;">${t('footnote')}</p>
+    <div class="table-scroll"><table>
+      <thead><tr><th>${t('thName')}</th><th>${t('thCategory')}</th><th class="num">${t('thPrice')}</th><th></th></tr></thead>
+      <tbody>${rows.length?rows:`<tr><td colspan="4" class="empty">${t('noServicesDefinedMsg')}</td></tr>`}</tbody>
+    </table></div>
+
+    <hr class="divider">
+    <h2 class="section-title">${t('newServiceHeading')}</h2>
+    <div class="service-form-grid">
+      <div>
+        <label for="new-name">${t('thName')}</label>
+        <input type="text" id="new-name" placeholder="${t('namePlaceholder')}" style="width:220px;">
+      </div>
+      <div>
+        <label for="new-cat">${t('thCategory')}</label>
+        <select id="new-cat">
+          ${Object.keys(CATS).map(c=>`<option value="${c}">${catLabel(c)}</option>`).join('')}
+        </select>
+      </div>
+      <div>
+        <label for="new-price">${t('priceLabel')}</label>
+        <input type="number" id="new-price" min="0" step="0.01" value="0">
+      </div>
+      <button class="btn" id="add-svc-btn">${t('addServiceHeading')}</button>
+    </div>
+  `;
+}
+
+/* ---------- SEMANAS E TIPOS DE DIA (normal / domingo) ---------- */
+function pad2(n){ return String(n).padStart(2, '0'); }
+function isoOf(d){ return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()); }
+function parseISO(iso){ const p = String(iso).split('-').map(Number); return new Date(p[0], p[1] - 1, p[2]); }
+function addDaysISO(iso, n){ const d = parseISO(iso); d.setDate(d.getDate() + n); return isoOf(d); }
+function weekStartISO(iso){ const d = parseISO(iso); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return isoOf(d); } // segunda-feira
+function weekDays(start){ const out = []; for(let i = 0; i < 7; i++) out.push(addDaysISO(start, i)); return out; }
+function isoWeekNum(iso){
+  const d = parseISO(iso);
+  const t0 = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const day = t0.getUTCDay() || 7;
+  t0.setUTCDate(t0.getUTCDate() + 4 - day);
+  const y0 = new Date(Date.UTC(t0.getUTCFullYear(), 0, 1));
+  return Math.ceil(((t0 - y0) / 86400000 + 1) / 7);
+}
+function dayKind(iso){
+  return isSundayISO(iso) ? 'domingo' : 'normal';
+}
+function kindTotals(recs){
+  const out = {};
+  ['normal', 'domingo'].forEach(k=>{ out[k] = {total: 0, base: 0, days: new Set()}; });
+  recs.forEach(r=>{
+    const o = out[dayKind(r.date)];
+    o.total += recTotal(r);
+    o.base += r.qty * r.unitPrice;
+    o.days.add(r.date);
+  });
+  Object.keys(out).forEach(k=>{
+    out[k].total = Math.round(out[k].total * 100) / 100;
+    out[k].extra = Math.round((out[k].total - out[k].base) * 100) / 100;
+    out[k].n = out[k].days.size;
+  });
+  return out;
+}
+function kindCards(k){
+  const defs = [['normal', 'kindNormal', 'var(--ink)'], ['domingo', 'kindSunday', 'var(--adicional)']];
+  return '<div class="breakdown">' + defs.map(d=>{
+    const o = k[d[0]];
+    const sub = o.n + ' ' + (o.n === 1 ? t('dayOne') : t('dayMany')) + (d[0] !== 'normal' && o.extra > 0 ? ' · +' + eur(o.extra) + ' ' + t('extraDouble') : '');
+    return `<div class="bd-card"><div class="k">${esc(t(d[1]))}</div><div class="v" style="color:${d[2]}">${eur(o.total)}</div><div class="s">${esc(sub)}</div></div>`;
+  }).join('') + '</div>';
+}
+function specialDaysTable(recs){
+  const map = Object.create(null);
+  recs.forEach(r=>{
+    const k = dayKind(r.date);
+    if(k === 'normal') return;
+    const m = map[r.date] || (map[r.date] = {date: r.date, kind: k, total: 0, qty: 0});
+    m.total += recTotal(r);
+    m.qty += r.qty;
+  });
+  const rows = Object.values(map).sort((a, b)=> a.date.localeCompare(b.date));
+  if(!rows.length) return `<p class="empty">${esc(t('noSpecialDays'))}</p>`;
+  const sum = rows.reduce((a, r)=> a + r.total, 0);
+  return `<div class="table-scroll"><table>
+    <thead><tr><th>${t('thDay')}</th><th>${t('thType')}</th><th class="num">${t('thQtyTotal')}</th><th class="num">${t('thValueTotal')}</th></tr></thead>
+    <tbody>${rows.map(r=>`<tr><td>${esc(fmtDateFull(r.date))}</td><td><span class="badge adicional">${esc(t('badgeSunday'))}</span></td><td class="num">${r.qty}</td><td class="num">${eur(r.total)}</td></tr>`).join('')}
+    <tr class="total-row"><td colspan="3">${esc(t('totalSpecial'))}</td><td class="num">${eur(sum)}</td></tr></tbody>
+  </table></div>`;
+}
+
+function renderSemanal(){
+  const start = state.selectedWeek, days = weekDays(start), end = days[6];
+  const recs = state.records.filter(r=> r.date >= start && r.date <= end);
+  const total = Math.round(recs.reduce((a, r)=> a + recTotal(r), 0) * 100) / 100;
+  const k = kindTotals(recs);
+  const isCurrent = weekStartISO(todayISO()) === start;
+  const rows = days.map(d=>{
+    const rs = recordsForDate(d);
+    const qty = rs.reduce((a, r)=> a + r.qty, 0);
+    return `<tr class="hist-link" data-weekgoto="${esc(d)}"><td>${esc(fmtDateFull(d))}${dayBadge(d)}</td><td class="num">${rs.length ? qty : '—'}</td><td class="num">${rs.length ? eur(dayTotal(d)) : '—'}</td></tr>`;
+  }).join('');
+  return `
+    <div class="top-flex">
+      <div>
+        <h2 class="section-title" style="margin-bottom:8px;">${esc(t('weekTitle'))}</h2>
+        <div class="week-nav">
+          <button class="btn secondary" id="week-prev">${esc(t('prevWeek'))}</button>
+          <button class="btn secondary" id="week-today" ${isCurrent ? 'disabled' : ''}>${esc(t('thisWeek'))}</button>
+          <button class="btn secondary" id="week-next">${esc(t('nextWeek'))}</button>
+        </div>
+        <div class="week-label">${esc(t('weekWord'))} ${isoWeekNum(start)} · ${esc(fmtDate(start))} – ${esc(fmtDate(end))} ${esc(end.slice(0, 4))}</div>
+      </div>
+      <div class="stamp">
+        <div class="label">${esc(t('totalSemana'))}</div>
+        <div class="val">${eur(total)}</div>
+      </div>
+    </div>
+
+    <h2 class="section-title">${esc(t('kindHeading'))}</h2>
+    ${kindCards(k)}
+
+    <hr class="divider">
+    <h2 class="section-title">${esc(t('weekDaysHeading'))}</h2>
+    <div class="table-scroll"><table>
+      <thead><tr><th>${t('thDay')}</th><th class="num">${t('thQtyTotal')}</th><th class="num">${t('thValueTotal')}</th></tr></thead>
+      <tbody>${rows}<tr class="total-row"><td>${esc(t('totalSemanaRow'))}</td><td class="num">${recs.reduce((a, r)=> a + r.qty, 0)}</td><td class="num">${eur(total)}</td></tr></tbody>
+    </table></div>
+  `;
+}
+
+/* ---------- GASTOS: ecra, recibos e PDF ---------- */
+function fmtIsoPt(iso){ return String(iso).split('-').reverse().join('/'); }
+function displayFullName(){
+  const p = state.currentProfile || {};
+  return ((p.firstName || '') + ' ' + (p.lastName || '')).trim() || state.currentEmail || '';
+}
+function expenseTotals(list){
+  const out = {portagem: 0, alimentacao: 0, total: 0};
+  list.forEach(e=>{ out[e.category] += e.amount; out.total += e.amount; });
+  Object.keys(out).forEach(k=>{ out[k] = Math.round(out[k] * 100) / 100; });
+  return out;
+}
+function expenseCards(list){
+  const tt = expenseTotals(list);
+  return '<div class="breakdown">'
+    + `<div class="bd-card"><div class="k">${esc(expCatLabel('portagem'))}</div><div class="v" style="color:var(--install)">${eur(tt.portagem)}</div></div>`
+    + `<div class="bd-card"><div class="k">${esc(expCatLabel('alimentacao'))}</div><div class="v" style="color:var(--suporte)">${eur(tt.alimentacao)}</div></div>`
+    + `<div class="bd-card"><div class="k">${esc(t('totalGastosRow'))}</div><div class="v">${eur(tt.total)}</div></div>`
+    + '</div>';
+}
+function receiptCell(e, withAttach){
+  if(e.hasReceipt) return `<button class="icon-edit" data-view="${esc(e.id)}">${esc(t('viewReceipt'))}</button>`;
+  return withAttach ? `<button class="icon-edit" data-attach="${esc(e.id)}">${esc(t('addReceipt'))}</button>` : '—';
+}
+function renderGastos(){
+  const date = state.expenseDate, month = state.expenseMonth;
+  const dayList = state.expenses.filter(e=> e.date === date).sort((a, b)=> a.createdAt - b.createdAt);
+  const monthList = state.expenses.filter(e=> e.date.startsWith(month)).sort((a, b)=> a.date.localeCompare(b.date) || a.createdAt - b.createdAt);
+  const dayTot = expenseTotals(dayList).total;
+  const monthTot = expenseTotals(monthList).total;
+  const catOpts = Object.keys(EXP_CATS).map(c=>`<option value="${esc(c)}">${esc(expCatLabel(c))}</option>`).join('');
+  const dayRows = dayList.length ? dayList.map(e=>`
+    <tr>
+      <td><span class="badge ${EXP_CATS[e.category].cls}">${esc(expCatLabel(e.category))}</span></td>
+      <td>${esc(e.note) || '—'}</td>
+      <td class="num">${eur(e.amount)}</td>
+      <td>${receiptCell(e, true)}</td>
+      <td class="num"><button class="icon-del" data-delexp="${esc(e.id)}" title="${esc(t('removeTitle'))}">✕</button></td>
+    </tr>`).join('') : `<tr><td colspan="5" class="empty">${esc(t('expNone'))}</td></tr>`;
+  const monthRows = monthList.length ? monthList.map(e=>`
+    <tr>
+      <td>${esc(fmtIsoPt(e.date))}</td>
+      <td><span class="badge ${EXP_CATS[e.category].cls}">${esc(expCatLabel(e.category))}</span></td>
+      <td>${esc(e.note) || '—'}</td>
+      <td class="num">${eur(e.amount)}</td>
+      <td>${receiptCell(e, false)}</td>
+    </tr>`).join('') + `<tr class="total-row"><td colspan="3">${esc(t('totalGastosRow'))}</td><td class="num">${eur(monthTot)}</td><td></td></tr>`
+    : `<tr><td colspan="5" class="empty">${esc(t('expNoneMonth'))}</td></tr>`;
+  return `
+    ${state.noExpensesColumn ? `<div class="settings-error">${esc(t('errNeedSql'))}</div>` : ''}
+    <div class="top-flex">
+      <div>
+        <h2 class="section-title" style="margin-bottom:8px;">${esc(t('expDayHeading'))}</h2>
+        <label for="exp-date">${esc(t('dateLabel'))}</label>
+        <input type="date" id="exp-date" value="${esc(date)}">
+      </div>
+      <div class="stamp">
+        <div class="label">${esc(t('expDayTotal'))}</div>
+        <div class="val">${eur(dayTot)}</div>
+      </div>
+    </div>
+
+    <h2 class="section-title">${esc(t('expAddHeading'))}</h2>
+    <div class="row-flex">
+      <div>
+        <label for="exp-cat">${esc(t('thCategory'))}</label>
+        <select id="exp-cat">${catOpts}</select>
+      </div>
+      <div>
+        <label for="exp-amount">${esc(t('expAmountLabel'))}</label>
+        <input type="text" id="exp-amount" inputmode="decimal" placeholder="0,00" autocomplete="off" maxlength="10" style="width:110px;">
+      </div>
+      <div style="flex:1;min-width:160px;">
+        <label for="exp-note">${esc(t('expNoteLabel'))}</label>
+        <input type="text" id="exp-note" maxlength="80" placeholder="${esc(t('expNotePlaceholder'))}" style="width:100%;">
+      </div>
+      <div>
+        <label for="exp-file">${esc(t('expReceiptLabel'))}</label>
+        <input type="file" id="exp-file" accept="image/*">
+      </div>
+      <button class="btn" id="exp-add-btn">${esc(t('expAddBtn'))}</button>
+    </div>
+    <input type="file" id="attach-input" accept="image/*" style="display:none;">
+
+    <hr class="divider">
+    <h2 class="section-title">${esc(t('expListHeading'))}</h2>
+    <div class="table-scroll"><table>
+      <thead><tr><th>${esc(t('thCategory'))}</th><th>${esc(t('expNoteLabel'))}</th><th class="num">${esc(t('thValueTotal'))}</th><th>${esc(t('thReceipt'))}</th><th></th></tr></thead>
+      <tbody>${dayRows}</tbody>
+    </table></div>
+
+    <hr class="divider">
+    <div class="top-flex">
+      <div>
+        <h2 class="section-title" style="margin-bottom:8px;">${esc(t('expMonthHeading'))}</h2>
+        <label for="exp-month">${esc(t('monthLabel'))}</label>
+        <input type="month" id="exp-month" value="${esc(month)}">
+      </div>
+      <div class="stamp">
+        <div class="label">${esc(t('expMonthTotal'))}</div>
+        <div class="val">${eur(monthTot)}</div>
+      </div>
+    </div>
+    ${expenseCards(monthList)}
+    <div class="table-scroll"><table>
+      <thead><tr><th>${esc(t('pdfDate'))}</th><th>${esc(t('thCategory'))}</th><th>${esc(t('expNoteLabel'))}</th><th class="num">${esc(t('thValueTotal'))}</th><th>${esc(t('thReceipt'))}</th></tr></thead>
+      <tbody>${monthRows}</tbody>
+    </table></div>
+
+    <hr class="divider">
+    <h2 class="section-title">${esc(t('pdfHeading'))}</h2>
+    <div class="pdf-box">
+      <p class="footnote" style="margin:0 0 8px;">${esc(t('pdfHelp'))}</p>
+      <label class="chk-row"><input type="checkbox" id="pdf-receipts" ${state.pdfWithReceipts ? 'checked' : ''}> ${esc(t('pdfWithReceipts'))}</label>
+      <div class="row-flex">
+        ${Object.keys(EXP_CATS).map(c=>`<button class="btn secondary" data-pdf="${esc(c)}">${esc(t('pdfBtn'))} · ${esc(expCatLabel(c))}</button>`).join('')}
+      </div>
+    </div>
+  `;
+}
+
+/* --- recibos (foto) --- */
+function resizeReceipt(file, maxSide){
+  maxSide = maxSide || 1280;
+  return new Promise((resolve, reject)=>{
+    const reader = new FileReader();
+    reader.onerror = reject;
+    reader.onload = ()=>{
+      const img = new Image();
+      img.onerror = reject;
+      img.onload = ()=>{
+        const sc = Math.min(1, maxSide / Math.max(img.width, img.height));
+        const w = Math.max(1, Math.round(img.width * sc)), h = Math.max(1, Math.round(img.height * sc));
+        const c = document.createElement('canvas');
+        c.width = w; c.height = h;
+        const g = c.getContext('2d');
+        g.fillStyle = '#ffffff'; g.fillRect(0, 0, w, h);
+        g.drawImage(img, 0, 0, w, h);
+        let q = 0.75, out = c.toDataURL('image/jpeg', q);
+        while(out.length > 700000 && q > 0.35){ q -= 0.1; out = c.toDataURL('image/jpeg', q); }
+        resolve(out);
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+async function processReceiptFile(file){
+  if(!/^image\//.test(file.type || '') || file.size > 15 * 1024 * 1024){ showToast(t('errReceiptInvalid')); return null; }
+  try{
+    const d = await resizeReceipt(file, 1280);
+    if(!isSafeReceipt(d)){ showToast(t('errReceiptInvalid')); return null; }
+    return d;
+  }catch(e){ showToast(t('errReceiptInvalid')); return null; }
+}
+async function addExpenseFromForm(){
+  const cat = document.getElementById('exp-cat').value;
+  const amount = parseAmount(document.getElementById('exp-amount').value);
+  const note = cleanText(document.getElementById('exp-note').value, 80);
+  const fileEl = document.getElementById('exp-file');
+  const file = fileEl && fileEl.files && fileEl.files[0];
+  if(!Object.prototype.hasOwnProperty.call(EXP_CATS, cat) || !DATE_RE.test(String(state.expenseDate))) return;
+  if(!(amount > 0)){ showToast(t('errAmount')); return; }
+  if(state.expenses.length >= 20000) return;
+  let receipt = null;
+  if(file){ receipt = await processReceiptFile(file); if(!receipt) return; }
+  const exp = {id: uid(), date: state.expenseDate, category: cat, amount: amount, note: note, hasReceipt: !!receipt, createdAt: Date.now()};
+  state.expenses.push(exp);
+  if(!(await saveExpenses())){ state.expenses.pop(); renderApp(); return; }
+  if(receipt){
+    try{ await saveReceipt(exp.id, receipt); }
+    catch(e){
+      console.error('Erro ao guardar recibo', e);
+      exp.hasReceipt = false;
+      await saveExpenses();
+      showToast(t('errReceiptSave'));
+      renderApp();
+      return;
+    }
+  }
+  renderApp();
+  showToast(t('toastExpenseAdded'));
+}
+async function attachReceipt(id, file){
+  const exp = state.expenses.find(e=> e.id === id);
+  if(!exp) return;
+  const receipt = await processReceiptFile(file);
+  if(!receipt) return;
+  try{ await saveReceipt(id, receipt); }
+  catch(e){ console.error(e); showToast(t('errReceiptSave')); return; }
+  exp.hasReceipt = true;
+  await saveExpenses();
+  renderApp();
+  showToast(t('toastReceiptSaved'));
+}
+async function deleteExpense(id){
+  const exp = state.expenses.find(e=> e.id === id);
+  if(!exp) return;
+  const ok = await showConfirm(t('confirmDeleteExpense'));
+  if(!ok) return;
+  state.expenses = state.expenses.filter(e=> e.id !== id);
+  await saveExpenses();
+  if(exp.hasReceipt){ try{ await deleteReceipt(id); }catch(e){ console.error(e); } }
+  renderApp();
+}
+async function viewReceipt(id){
+  if(!ID_RE.test(String(id))) return;
+  let photo = null;
+  try{ photo = await fetchReceipt(id); }
+  catch(e){ showToast(mapAuthError(e)); return; }
+  if(!photo){ showToast(t('errReceiptLoad')); return; }
+  const ov = document.createElement('div');
+  ov.className = 'confirm-overlay';
+  ov.innerHTML = `<div class="receipt-box"><img alt="" src="${photo}"><div class="confirm-actions"><button class="btn secondary" id="receipt-close">${esc(t('closeBtn'))}</button></div></div>`;
+  document.body.appendChild(ov);
+  const close = ()=> ov.remove();
+  ov.querySelector('#receipt-close').onclick = close;
+  ov.onclick = (e)=>{ if(e.target === ov) close(); };
+}
+
+/* ---------- GERADOR DE PDF (sem bibliotecas) ---------- */
+const HELV = [278,278,355,556,556,889,667,191,333,333,389,584,278,333,278,278,556,556,556,556,556,556,556,556,556,556,278,278,584,584,584,556,1015,667,667,722,722,667,611,778,722,278,500,667,556,833,722,778,667,778,722,667,611,722,667,944,667,667,611,278,278,278,469,556,333,556,556,500,556,556,278,556,556,222,222,500,222,833,556,556,556,556,333,500,278,556,500,722,500,500,500,334,260,334,584];
+function textW(str, size){
+  let w = 0;
+  for(const ch of String(str)){
+    const base = ch.normalize('NFD').charAt(0);
+    const c = base.charCodeAt(0);
+    w += (c >= 32 && c <= 126) ? HELV[c - 32] : 556;
+  }
+  return w * size / 1000;
+}
+function fitText(str, size, maxW){
+  str = String(str);
+  if(textW(str, size) <= maxW) return str;
+  while(str.length > 1 && textW(str + '...', size) > maxW) str = str.slice(0, -1);
+  return str + '...';
+}
+function pdfEnc(str){
+  const map = {'€':0x80, '‘':0x91, '’':0x92, '“':0x93, '”':0x94, '•':0x95, '–':0x96, '—':0x97, '…':0x85};
+  let out = '';
+  for(const ch of String(str).replace(/[\r\n\t]+/g, ' ')){
+    const c = ch.codePointAt(0);
+    if(map[ch] !== undefined) out += String.fromCharCode(map[ch]);
+    else if(c === 0xa0 || c === 0x202f || c === 0x2009) out += ' ';
+    else if(c >= 32 && c < 256 && !(c >= 0x7f && c <= 0x9f)) out += String.fromCharCode(c);
+    else out += '?';
+  }
+  return out;
+}
+function pdfEsc(bin){ return bin.replace(/([\\()])/g, '\\$1'); }
+function strToBytes(s){
+  const u = new Uint8Array(s.length);
+  for(let i = 0; i < s.length; i++) u[i] = s.charCodeAt(i) & 255;
+  return u;
+}
+function dataUrlBytes(d){
+  const b = atob(d.slice(d.indexOf(',') + 1));
+  const u = new Uint8Array(b.length);
+  for(let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i);
+  return u;
+}
+function jpegInfo(bytes){
+  if(!bytes || bytes[0] !== 0xFF || bytes[1] !== 0xD8) return null;
+  let i = 2;
+  while(i + 9 < bytes.length){
+    if(bytes[i] !== 0xFF){ i++; continue; }
+    const m = bytes[i + 1];
+    if(m === 0xD8 || m === 0x01 || (m >= 0xD0 && m <= 0xD7)){ i += 2; continue; }
+    const len = (bytes[i + 2] << 8) | bytes[i + 3];
+    if(m >= 0xC0 && m <= 0xCF && m !== 0xC4 && m !== 0xC8 && m !== 0xCC){
+      return {h: (bytes[i + 5] << 8) | bytes[i + 6], w: (bytes[i + 7] << 8) | bytes[i + 8], comps: bytes[i + 9]};
+    }
+    i += 2 + len;
+  }
+  return null;
+}
+function PdfPage(){ this.ops = []; this.images = []; }
+PdfPage.prototype.text = function(x, y, size, str, bold){
+  this.ops.push('BT /' + (bold ? 'F2' : 'F1') + ' ' + size + ' Tf ' + x.toFixed(2) + ' ' + y.toFixed(2) + ' Td (' + pdfEsc(pdfEnc(str)) + ') Tj ET');
+};
+PdfPage.prototype.line = function(x1, y1, x2, y2, w, gray){
+  this.ops.push((gray === undefined ? 0 : gray) + ' G ' + (w || 0.5) + ' w ' + x1.toFixed(2) + ' ' + y1.toFixed(2) + ' m ' + x2.toFixed(2) + ' ' + y2.toFixed(2) + ' l S');
+};
+PdfPage.prototype.image = function(name, jpeg, info, x, y, dw, dh){
+  this.images.push({name: name, jpeg: jpeg, w: info.w, h: info.h, comps: info.comps});
+  this.ops.push('q ' + dw.toFixed(2) + ' 0 0 ' + dh.toFixed(2) + ' ' + x.toFixed(2) + ' ' + y.toFixed(2) + ' cm /' + name + ' Do Q');
+};
+function buildPdf(pages, title){
+  const objs = [];
+  const add = (parts)=>{ objs.push(parts); return objs.length; };
+  add(null); add(null); // 1 = catalogo, 2 = paginas
+  const fReg = add(['<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>']);
+  const fBold = add(['<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>']);
+  const kids = [];
+  pages.forEach(pg=>{
+    const refs = [];
+    pg.images.forEach(im=>{
+      const num = add(['<< /Type /XObject /Subtype /Image /Width ' + im.w + ' /Height ' + im.h + ' /ColorSpace ' + (im.comps === 1 ? '/DeviceGray' : '/DeviceRGB') + ' /BitsPerComponent 8 /Filter /DCTDecode /Length ' + im.jpeg.length + ' >>\nstream\n', im.jpeg, '\nendstream']);
+      refs.push('/' + im.name + ' ' + num + ' 0 R');
+    });
+    const content = pg.ops.join('\n');
+    const cnum = add(['<< /Length ' + content.length + ' >>\nstream\n', content, '\nendstream']);
+    const pnum = add(['<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 ' + fReg + ' 0 R /F2 ' + fBold + ' 0 R >>' + (refs.length ? ' /XObject << ' + refs.join(' ') + ' >>' : '') + ' >> /Contents ' + cnum + ' 0 R >>']);
+    kids.push(pnum + ' 0 R');
+  });
+  objs[0] = ['<< /Type /Catalog /Pages 2 0 R >>'];
+  objs[1] = ['<< /Type /Pages /Kids [ ' + kids.join(' ') + ' ] /Count ' + kids.length + ' >>'];
+  const info = add(['<< /Title (' + pdfEsc(pdfEnc(title)) + ') /Creator (Registo FTTH) /Producer (Registo FTTH) >>']);
+  const chunks = [], offsets = [];
+  let offset = 0;
+  const push = (p)=>{ const u = typeof p === 'string' ? strToBytes(p) : p; chunks.push(u); offset += u.length; };
+  push('%PDF-1.4\n%\u00e2\u00e3\u00cf\u00d3\n');
+  objs.forEach((parts, i)=>{
+    offsets.push(offset);
+    push((i + 1) + ' 0 obj\n');
+    parts.forEach(push);
+    push('\nendobj\n');
+  });
+  const xref = offset;
+  push('xref\n0 ' + (objs.length + 1) + '\n0000000000 65535 f \n');
+  offsets.forEach(o=> push(String(o).padStart(10, '0') + ' 00000 n \n'));
+  push('trailer\n<< /Size ' + (objs.length + 1) + ' /Root 1 0 R /Info ' + info + ' 0 R >>\nstartxref\n' + xref + '\n%%EOF');
+  return new Blob(chunks, {type: 'application/pdf'});
+}
+function buildExpensePdf(cat, month, list, receipts, withReceipts){
+  const W = 595.28, H = 841.89, M = 50, RX = W - M;
+  const pages = [];
+  const catName = expCatLabel(cat);
+  const mp = month.split('-').map(Number);
+  const monthLabel = new Date(mp[0], mp[1] - 1, 1).toLocaleDateString(localeForLang(), {month: 'long', year: 'numeric'});
+  let pg = null, y = 0;
+  const tableHeader = ()=>{
+    pg.text(M, y, 9, t('pdfDate'), true);
+    pg.text(M + 70, y, 9, t('pdfDesc'), true);
+    pg.text(M + 370, y, 9, t('thReceipt'), true);
+    const hv = t('pdfValue');
+    pg.text(RX - textW(hv, 9), y, 9, hv, true);
+    y -= 6; pg.line(M, y, RX, y, 0.8); y -= 14;
+  };
+  const newPage = (first, noTable)=>{
+    pg = new PdfPage(); pages.push(pg); y = H - M;
+    if(first){
+      pg.text(M, y, 9, 'Registo FTTH', false); y -= 30;
+      pg.text(M, y, 20, t('pdfTitle'), true); y -= 26;
+      pg.text(M, y, 14, catName, true); y -= 28;
+      [[t('pdfName'), displayFullName()], [t('pdfCategory'), catName], [t('pdfPeriod'), monthLabel], [t('pdfIssued'), fmtIsoPt(todayISO())]].forEach(r=>{
+        pg.text(M, y, 10, r[0] + ':', true);
+        pg.text(M + 90, y, 10, fitText(r[1], 10, RX - M - 90), false);
+        y -= 16;
+      });
+      y -= 12;
+    }else{
+      pg.text(M, y, 11, fitText(t('pdfTitle') + ' - ' + catName + ' - ' + monthLabel, 11, RX - M), true); y -= 24;
+    }
+    if(!noTable) tableHeader();
+  };
+  newPage(true, false);
+  let total = 0;
+  list.forEach(e=>{
+    if(y < M + 60) newPage(false, false);
+    pg.text(M, y, 10, fmtIsoPt(e.date), false);
+    pg.text(M + 70, y, 10, fitText(e.note || '-', 10, 285), false);
+    pg.text(M + 370, y, 10, e.hasReceipt ? t('yesWord') : t('noWord'), false);
+    const v = eur(e.amount);
+    pg.text(RX - textW(v, 10), y, 10, v, false);
+    pg.line(M, y - 5, RX, y - 5, 0.3, 0.8);
+    y -= 18;
+    total += e.amount;
+  });
+  if(y < M + 110) newPage(false, true);
+  y -= 4;
+  pg.line(M, y + 10, RX, y + 10, 1);
+  const tv = eur(Math.round(total * 100) / 100);
+  pg.text(M + 70, y - 6, 11, t('pdfTotal') + ' (' + list.length + ')', true);
+  pg.text(RX - textW(tv, 11) * 1.06, y - 6, 11, tv, true);
+  y -= 70;
+  pg.line(M, y, M + 230, y, 0.6);
+  pg.text(M, y - 12, 9, t('pdfSignature'), false);
+  pg.line(M + 280, y, RX, y, 0.6);
+  pg.text(M + 280, y - 12, 9, t('pdfDate'), false);
+
+  if(withReceipts){
+    list.forEach(e=>{
+      const d = receipts[e.id];
+      if(!d) return;
+      const jpeg = dataUrlBytes(d), info = jpegInfo(jpeg);
+      if(!info || !info.w || !info.h) return;
+      newPage(false, true);
+      pg.text(M, y, 11, fmtIsoPt(e.date) + '  -  ' + catName + '  -  ' + eur(e.amount), true); y -= 16;
+      if(e.note) { pg.text(M, y, 10, fitText(e.note, 10, RX - M), false); y -= 14; }
+      y -= 6;
+      const maxW = RX - M, maxH = y - M - 20;
+      const sc = Math.min(maxW / info.w, maxH / info.h, 3);
+      const dw = info.w * sc, dh = info.h * sc;
+      pg.image('Im1', jpeg, info, M + (maxW - dw) / 2, y - dh, dw, dh);
+    });
+  }
+  pages.forEach((p, i)=>{
+    const f = 'Registo FTTH  -  ' + (i + 1) + '/' + pages.length;
+    p.text(W / 2 - textW(f, 8) / 2, 28, 8, f, false);
+  });
+  return buildPdf(pages, t('pdfTitle') + ' - ' + catName + ' - ' + monthLabel);
+}
+function downloadBlob(blob, name){
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=> URL.revokeObjectURL(url), 60000);
+}
+async function generateExpensePdf(cat, btn){
+  if(!Object.prototype.hasOwnProperty.call(EXP_CATS, cat)) return;
+  const month = state.expenseMonth;
+  const list = state.expenses.filter(e=> e.category === cat && e.date.startsWith(month)).sort((a, b)=> a.date.localeCompare(b.date) || a.createdAt - b.createdAt);
+  if(!list.length){ showToast(t('pdfNone')); return; }
+  const withReceipts = state.pdfWithReceipts;
+  const label = btn.textContent;
+  btn.disabled = true; btn.textContent = t('pdfWorking');
+  try{
+    let receipts = {};
+    if(withReceipts){
+      const ids = list.filter(e=> e.hasReceipt).map(e=> e.id);
+      if(ids.length) receipts = await fetchReceipts(ids);
+    }
+    downloadBlob(buildExpensePdf(cat, month, list, receipts, withReceipts), 'comprovativo-' + cat + '-' + month + '.pdf');
+  }catch(e){ console.error(e); showToast(mapAuthError(e)); }
+  btn.disabled = false; btn.textContent = label;
+}
+
+
+function renderMensal(){
+  const month = state.selectedMonth;
+  const recs = state.records.filter(r=>r.date.startsWith(month));
+  const total = recs.reduce((s,r)=>s+recTotal(r),0);
+
+  const byCat = {instalacao:0, suporte:0, adicional:0};
+  recs.forEach(r=> byCat[r.category] += recTotal(r));
+
+  const perService = aggregateByService(recs);
+
+  const search2 = state.monthServiceSearch.trim().toLowerCase();
+  const filteredPerService = search2
+    ? perService.filter(s => s.name.toLowerCase().includes(search2) || catLabel(s.category).toLowerCase().includes(search2))
+    : perService;
+  const serviceRows = perService.length
+    ? (filteredPerService.length
+        ? filteredPerService.map(s=>`
+    <tr>
+      <td>${esc(s.name)} <span class="badge ${CATS[s.category].class}">${catLabel(s.category)}</span></td>
+      <td class="num">${s.qty}</td>
+      <td class="num">${eur(s.total)}</td>
+    </tr>`).join('')
+        : `<tr><td colspan="3" class="empty">${t('noSearchResultsMsg')}</td></tr>`)
+      + `
+    <tr class="total-row"><td>${t('totalDoMesRow')}</td><td class="num">${perService.reduce((a,s)=>a+s.qty,0)}</td><td class="num">${eur(total)}</td></tr>`
+    : `<tr><td colspan="3" class="empty">${t('noDataSummaryMsg')}</td></tr>`;
+
+  return `
+    <div class="top-flex">
+      <div>
+        <h2 class="section-title" style="margin-bottom:8px;">${t('monthlyHeading')}</h2>
+        <label for="month-picker">${t('monthLabel')}</label>
+        <input type="month" id="month-picker" value="${esc(month)}">
+      </div>
+      <div class="stamp">
+        <div class="label">${t('totalDoMes')}</div>
+        <div class="val">${eur(total)}</div>
+      </div>
+    </div>
+
+    <div class="breakdown">
+      <div class="bd-card"><div class="k">${t('catInstalacoesPlural')}</div><div class="v" style="color:var(--install)">${eur(byCat.instalacao)}</div></div>
+      <div class="bd-card"><div class="k">${t('catSuportesPlural')}</div><div class="v" style="color:var(--suporte)">${eur(byCat.suporte)}</div></div>
+      <div class="bd-card"><div class="k">${t('catAdicionaisPlural')}</div><div class="v" style="color:var(--adicional)">${eur(byCat.adicional)}</div></div>
+    </div>
+
+    <hr class="divider">
+    <h2 class="section-title">${t('kindHeading')}</h2>
+    ${kindCards(kindTotals(recs))}
+    <h3 class="sub-title" style="margin-top:18px;">${t('specialDaysHeading')}</h3>
+    ${specialDaysTable(recs)}
+
+    <hr class="divider">
+    <h2 class="section-title">${t('expMonthSummaryHeading')}</h2>
+    ${expenseCards(state.expenses.filter(e=> e.date.startsWith(month)))}
+
+    <hr class="divider">
+    <h2 class="section-title">${t('monthSumHeading')}</h2>
+    <div class="search-icon-wrap" style="margin-bottom:10px;">
+      <span class="icon">🔍</span>
+      <input type="text" id="month-svc-search" placeholder="${t('searchServiceTypePlaceholder')}" value="${esc(state.monthServiceSearch)}">
+    </div>
+    <div class="table-scroll"><table>
+      <thead><tr><th>${t('serviceLabel')}</th><th class="num">${t('thQtyTotal')}</th><th class="num">${t('thValueTotal')}</th></tr></thead>
+      <tbody>${serviceRows}</tbody>
+    </table></div>
+  `;
+}
+
+function renderDefinicoes(){
+  return `
+    <h2 class="section-title">${t('settingsHeading')}</h2>
+
+    <div class="settings-block">
+      <h3 class="sub-title">${t('appearanceHeading')}</h3>
+      <div class="theme-choice">
+        <button data-set-theme="light" class="${state.theme==='light'?'active':''}">${t('themeLight')}</button>
+        <button data-set-theme="dark" class="${state.theme==='dark'?'active':''}">${t('themeDark')}</button>
+      </div>
+    </div>
+
+    <div class="settings-block">
+      <h3 class="sub-title">${t('languageHeading')}</h3>
+      <select id="lang-select">
+        ${LANGUAGES.map(l=>`<option value="${l.code}" ${l.code===state.language?'selected':''}>${l.label}</option>`).join('')}
+      </select>
+    </div>
+
+    <div class="settings-block">
+      <h3 class="sub-title">${t('editAccountHeading')}</h3>
+      ${state.settingsAccountError ? `<div class="settings-error">${esc(state.settingsAccountError)}</div>` : ''}
+
+      <div class="row-flex">
+        <div style="flex:1;min-width:140px;">
+          <label for="acc-firstname">${t('firstNameLabel')}</label>
+          <input type="text" id="acc-firstname" value="${esc(state.currentProfile.firstName)}" style="width:100%;">
+        </div>
+        <div style="flex:1;min-width:140px;">
+          <label for="acc-lastname">${t('lastNameLabel')}</label>
+          <input type="text" id="acc-lastname" value="${esc(state.currentProfile.lastName)}" style="width:100%;">
+        </div>
+      </div>
+      <div class="auth-field">
+        <label for="acc-email">${t('emailLabel')}</label>
+        <input type="email" id="acc-email" value="${esc(state.currentProfile.email)}" disabled>
+      </div>
+      <div class="auth-field">
+        <label for="acc-phone">${t('phoneLabel')}</label>
+        <input type="tel" id="acc-phone" value="${esc(state.currentProfile.phone)}">
+      </div>
+      <button class="btn" id="save-account-btn" ${state.settingsAccountBusy?'disabled':''}>
+        ${state.settingsAccountBusy ? t('busyBtn') : t('saveChangesBtn')}
+      </button>
+    </div>
+
+    <div class="settings-block">
+      <h3 class="sub-title">${t('changePasswordHeading')}</h3>
+      ${state.settingsPasswordError ? `<div class="settings-error">${esc(state.settingsPasswordError)}</div>` : ''}
+      ${state.settingsPasswordSuccess ? `<div class="settings-success">${esc(state.settingsPasswordSuccess)}</div>` : ''}
+      <div class="auth-field">
+        <label for="cur-pass">${t('currentPasswordLabel')}</label>
+        <input type="password" id="cur-pass">
+      </div>
+      <div class="auth-field">
+        <label for="new-pass">${t('newPasswordLabel')}</label>
+        <input type="password" id="new-pass">
+      </div>
+      <div class="auth-field">
+        <label for="new-pass2">${t('confirmNewPasswordLabel')}</label>
+        <input type="password" id="new-pass2">
+      </div>
+      <label class="show-pass-row">
+        <input type="checkbox" id="settings-show-pass"> ${t('showPasswordLabel')}
+      </label>
+      <button class="btn" id="change-pass-btn" ${state.settingsPasswordBusy?'disabled':''}>
+        ${state.settingsPasswordBusy ? t('busyBtn') : t('changePasswordBtn')}
+      </button>
+    </div>
+
+  `;
+}
+
+function attachHandlers(){
+  if(state.tab==='diario'){
+    const dp = document.getElementById('date-picker');
+    if(dp) dp.onchange = e=>{ state.selectedDate = e.target.value; renderApp(); };
+
+
+    const addBtn = document.getElementById('add-entry-btn');
+    if(addBtn) addBtn.onclick = async ()=>{
+      const svcId = document.getElementById('svc-select').value;
+      const qty = parseQty(document.getElementById('svc-qty').value);
+      const svc = state.services.find(s=>s.id===svcId);
+      if(!svc || state.records.length >= 50000) return;
+      state.records.push({
+        id: uid(),
+        date: state.selectedDate,
+        serviceId: svc.id,
+        serviceName: svc.name,
+        category: svc.category,
+        unitPrice: svc.price,
+        qty: qty,
+        total: Math.round(qty*svc.price*100)/100,
+        createdAt: Date.now()
+      });
+      await saveRecords();
+      renderApp();
+      showToast(t('toastServiceRegistered'));
+    };
+
+    document.querySelectorAll('[data-del]').forEach(b=>{
+      b.onclick = async ()=>{
+        const ok = await showConfirm(t('confirmDeleteRecord'));
+        if(!ok) return;
+        state.records = state.records.filter(r=>r.id!==b.dataset.del);
+        await saveRecords();
+        renderApp();
+      };
+    });
+
+    document.querySelectorAll('[data-edit]').forEach(b=>{
+      b.onclick = ()=>{ state.editingRecordId = b.dataset.edit; renderApp(); };
+    });
+
+    const editCancel = document.getElementById('edit-rec-cancel');
+    if(editCancel) editCancel.onclick = ()=>{ state.editingRecordId = null; renderApp(); };
+
+    const editSave = document.getElementById('edit-rec-save');
+    if(editSave) editSave.onclick = async ()=>{
+      const id = editSave.dataset.recid;
+      const rec = state.records.find(r=>r.id===id);
+      const svcId = document.getElementById('edit-rec-svc').value;
+      const qty = parseQty(document.getElementById('edit-rec-qty').value);
+      const svc = state.services.find(s=>s.id===svcId);
+      if(rec && svc){
+        rec.serviceId = svc.id;
+        rec.serviceName = svc.name;
+        rec.category = svc.category;
+        rec.unitPrice = svc.price;
+        rec.qty = qty;
+        rec.total = Math.round(qty*svc.price*100)/100;
+        await saveRecords();
+      }
+      state.editingRecordId = null;
+      renderApp();
+      showToast(t('toastRecordUpdated'));
+    };
+
+    document.querySelectorAll('[data-goto]').forEach(el=>{
+      el.onclick = ()=>{ state.selectedDate = el.dataset.goto; state.historySearch=''; renderApp(); };
+    });
+
+    const histSearch = document.getElementById('hist-search');
+    if(histSearch) histSearch.oninput = (e)=>{
+      state.historySearch = e.target.value;
+      renderApp();
+      const el = document.getElementById('hist-search');
+      if(el){ el.focus(); el.setSelectionRange(el.value.length, el.value.length); }
+    };
+
+    const daySvcSearch = document.getElementById('day-svc-search');
+    if(daySvcSearch) daySvcSearch.oninput = (e)=>{
+      state.dayServiceSearch = e.target.value;
+      renderApp();
+      const el = document.getElementById('day-svc-search');
+      if(el){ el.focus(); el.setSelectionRange(el.value.length, el.value.length); }
+    };
+  }
+
+  if(state.tab==='servicos'){
+    document.querySelectorAll('[data-save]').forEach(btn=>{
+      btn.onclick = async ()=>{
+        const tr = btn.closest('tr');
+        const id = btn.dataset.save;
+        const svc = state.services.find(s=>s.id===id);
+        svc.name = cleanText(titleCase(tr.querySelector('.edit-name').value), 80) || svc.name;
+        const catVal = tr.querySelector('.edit-cat').value;
+        svc.category = Object.prototype.hasOwnProperty.call(CATS, catVal) ? catVal : svc.category;
+        svc.price = parsePrice(tr.querySelector('.edit-price').value);
+        await saveServices();
+        renderApp();
+        showToast(t('toastServiceUpdated'));
+      };
+    });
+    document.querySelectorAll('[data-delsvc]').forEach(btn=>{
+      btn.onclick = async ()=>{
+        const ok = await showConfirm(t('confirmDeleteService'));
+        if(!ok) return;
+        state.services = state.services.filter(s=>s.id!==btn.dataset.delsvc);
+        await saveServices();
+        renderApp();
+      };
+    });
+    const addSvcBtn = document.getElementById('add-svc-btn');
+    if(addSvcBtn) addSvcBtn.onclick = async ()=>{
+      const name = cleanText(titleCase(document.getElementById('new-name').value), 80);
+      const rawCat = document.getElementById('new-cat').value;
+      const category = Object.prototype.hasOwnProperty.call(CATS, rawCat) ? rawCat : 'adicional';
+      const price = parsePrice(document.getElementById('new-price').value);
+      if(!name || state.services.length >= 500) return;
+      state.services.push({id: uid(), name, category, price});
+      await saveServices();
+      renderApp();
+      showToast(t('toastServiceRegistered'));
+    };
+  }
+
+  if(state.tab==='gastos'){
+    const ed = document.getElementById('exp-date');
+    if(ed) ed.onchange = e=>{ if(DATE_RE.test(e.target.value)) state.expenseDate = e.target.value; renderApp(); };
+    const em = document.getElementById('exp-month');
+    if(em) em.onchange = e=>{ if(/^\d{4}-\d{2}$/.test(e.target.value)) state.expenseMonth = e.target.value; renderApp(); };
+    const pr = document.getElementById('pdf-receipts');
+    if(pr) pr.onchange = e=>{ state.pdfWithReceipts = e.target.checked; };
+    const addBtn = document.getElementById('exp-add-btn');
+    if(addBtn) addBtn.onclick = addExpenseFromForm;
+    document.querySelectorAll('[data-delexp]').forEach(b=>{ b.onclick = ()=> deleteExpense(b.dataset.delexp); });
+    document.querySelectorAll('[data-view]').forEach(b=>{ b.onclick = ()=> viewReceipt(b.dataset.view); });
+    document.querySelectorAll('[data-attach]').forEach(b=>{
+      b.onclick = ()=>{
+        const inp = document.getElementById('attach-input');
+        inp.dataset.target = b.dataset.attach;
+        inp.value = '';
+        inp.click();
+      };
+    });
+    const ai = document.getElementById('attach-input');
+    if(ai) ai.onchange = ()=>{ if(ai.files && ai.files[0]) attachReceipt(ai.dataset.target, ai.files[0]); };
+    document.querySelectorAll('[data-pdf]').forEach(b=>{ b.onclick = ()=> generateExpensePdf(b.dataset.pdf, b); });
+  }
+
+  if(state.tab==='semanal'){
+    const wPrev = document.getElementById('week-prev');
+    if(wPrev) wPrev.onclick = ()=>{ state.selectedWeek = addDaysISO(state.selectedWeek, -7); renderApp(); };
+    const wNext = document.getElementById('week-next');
+    if(wNext) wNext.onclick = ()=>{ state.selectedWeek = addDaysISO(state.selectedWeek, 7); renderApp(); };
+    const wToday = document.getElementById('week-today');
+    if(wToday) wToday.onclick = ()=>{ state.selectedWeek = weekStartISO(todayISO()); renderApp(); };
+    document.querySelectorAll('[data-weekgoto]').forEach(tr=>{
+      tr.onclick = ()=>{ state.selectedDate = tr.dataset.weekgoto; state.tab = 'diario'; renderTabs(); renderApp(); };
+    });
+  }
+
+  if(state.tab==='mensal'){
+    const mp = document.getElementById('month-picker');
+    if(mp) mp.onchange = e=>{ state.selectedMonth = e.target.value; renderApp(); };
+
+    const monthSvcSearch = document.getElementById('month-svc-search');
+    if(monthSvcSearch) monthSvcSearch.oninput = (e)=>{
+      state.monthServiceSearch = e.target.value;
+      renderApp();
+      const el = document.getElementById('month-svc-search');
+      if(el){ el.focus(); el.setSelectionRange(el.value.length, el.value.length); }
+    };
+  }
+
+  if(state.tab==='definicoes'){
+    document.querySelectorAll('[data-set-theme]').forEach(btn=>{
+      btn.onclick = ()=> setTheme(btn.dataset.setTheme);
+    });
+
+    const langSelect = document.getElementById('lang-select');
+    if(langSelect) langSelect.onchange = (e)=> setLanguage(e.target.value);
+
+    const saveAccountBtn = document.getElementById('save-account-btn');
+    if(saveAccountBtn) saveAccountBtn.onclick = async ()=>{
+      state.settingsAccountError = '';
+      const firstName = document.getElementById('acc-firstname').value;
+      const lastName = document.getElementById('acc-lastname').value;
+      const phone = document.getElementById('acc-phone').value;
+
+      if(!firstName.trim() || !lastName.trim() || !phone.trim()){
+        state.settingsAccountError = t('errRequiredFields'); renderApp(); return;
+      }
+      if(phone.replace(/\D/g,'').length < 6){
+        state.settingsAccountError = t('errPhoneInvalid'); renderApp(); return;
+      }
+
+      state.settingsAccountBusy = true; renderApp();
+      state.currentProfile.firstName = firstName.trim();
+      state.currentProfile.lastName = lastName.trim();
+      state.currentProfile.phone = phone.trim();
+      await saveProfile();
+      state.settingsAccountBusy = false;
+      render();
+      showToast(t('toastAccountUpdated'));
+    };
+
+    const showSettingsPass = document.getElementById('settings-show-pass');
+    if(showSettingsPass) showSettingsPass.onchange = (e)=>{
+      const type = e.target.checked ? 'text' : 'password';
+      ['cur-pass','new-pass','new-pass2'].forEach(id=>{
+        const el = document.getElementById(id);
+        if(el) el.type = type;
+      });
+    };
+
+    const changePassBtn = document.getElementById('change-pass-btn');
+    if(changePassBtn) changePassBtn.onclick = async ()=>{
+      state.settingsPasswordError = '';
+      state.settingsPasswordSuccess = '';
+      const curPass = document.getElementById('cur-pass').value;
+      const newPass = document.getElementById('new-pass').value;
+      const newPass2 = document.getElementById('new-pass2').value;
+
+      if(!passwordOk(newPass)){ state.settingsPasswordError = t('errPasswordLength'); renderApp(); return; }
+      if(newPass !== newPass2){ state.settingsPasswordError = t('errPasswordMismatch'); renderApp(); return; }
+
+      state.settingsPasswordBusy = true; renderApp();
+      try{
+        await sbRequest('/auth/v1/token?grant_type=password', {method:'POST', body:{email: state.currentEmail, password: curPass}});
+      }catch(e){
+        state.settingsPasswordBusy = false;
+        state.settingsPasswordError = (e.status === 400 || e.code === 'invalid_credentials') ? t('errCurrentPasswordWrong') : mapAuthError(e);
+        renderApp(); return;
+      }
+      try{
+        const token = await getToken();
+        await sbRequest('/auth/v1/user', {method:'PUT', token: token, body:{password: newPass}});
+      }catch(e){
+        state.settingsPasswordBusy = false;
+        state.settingsPasswordError = mapAuthError(e);
+        renderApp(); return;
+      }
+      state.settingsPasswordBusy = false;
+      renderApp();
+      showToast(t('toastPasswordChanged'));
+    };
+  }
+}
+
+(async function init(){
+  await loadTheme();
+  await loadLanguage();
+  try{
+    const sb = await window.storage.get('ftth_sidebar_collapsed', false);
+    if(sb && sb.value === '1') document.body.classList.add('sidebar-collapsed');
+  }catch(e){}
+
+  // limpeza: versoes antigas guardavam passwords em texto simples neste dispositivo
+  try{
+    const oldUsers = localStorage.getItem('ftth_users');
+    if(oldUsers){
+      const list = JSON.parse(oldUsers);
+      if(Array.isArray(list)){
+        list.forEach(u=>{ if(u && typeof u === 'object') delete u.password; });
+        localStorage.setItem('ftth_users', JSON.stringify(list));
+      }
+    }
+  }catch(e){}
+
+  // link de recuperacao de password vindo do email
+  const hash = window.location.hash || '';
+  let confirmed = null;
+  if(hash.indexOf('access_token=') !== -1 && hash.indexOf('type=recovery') !== -1){
+    const params = new URLSearchParams(hash.replace(/^#/, ''));
+    state.recoverToken = params.get('access_token');
+    state.authMode = 'recover';
+    state.recoverStep = 'reset';
+    history.replaceState(null, '', window.location.pathname + window.location.search);
+  }else if(hash.indexOf('access_token=') !== -1 && /type=(signup|invite|magiclink|email_change)/.test(hash)){
+    const params = new URLSearchParams(hash.replace(/^#/, ''));
+    const at = params.get('access_token'), rt = params.get('refresh_token');
+    const ei = parseInt(params.get('expires_in') || '3600', 10);
+    if(at && rt) confirmed = {at: at, rt: rt, ei: (ei > 0 && ei < 86400 * 7) ? ei : 3600};
+    history.replaceState(null, '', window.location.pathname + window.location.search);
+  }else if(hash.indexOf('error_code=') !== -1){
+    state.authMode = 'login';
+    state.authError = t('errLinkExpired');
+    history.replaceState(null, '', window.location.pathname + window.location.search);
+  }
+
+  loadStoredSession();
+  if(confirmed){
+    state.booting = true;
+    render();
+    try{
+      const user = await sbRequest('/auth/v1/user', {token: confirmed.at});
+      storeSession({access_token: confirmed.at, refresh_token: confirmed.rt, expires_at: Math.floor(Date.now()/1000) + confirmed.ei, user: user});
+      state.booting = false;
+      if(await startSession()) showToast(t('emailConfirmedMsg'));
+    }catch(e){
+      state.booting = false;
+      state.authInfo = t('emailConfirmedLoginMsg');
+      render();
+    }
+  }else{
+    state.booting = !!(session && !state.recoverToken);
+    render();
+    if(state.booting){
+      const tok = await getToken();
+      state.booting = false;
+      if(tok){ await startSession(); } else { render(); }
+    }
+  }
+})();
+</script>
+</body>
+</html>

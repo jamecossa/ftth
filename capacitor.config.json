@@ -1,0 +1,13 @@
+{
+  "appId": "pt.ftth.registo",
+  "appName": "Registo FTTH",
+  "webDir": "www",
+  "loggingBehavior": "none",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": false,
+    "webContentsDebuggingEnabled": false
+  }
+}
